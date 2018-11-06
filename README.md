@@ -10,5 +10,6 @@ Previous version: [mmo-proxy-server](https://github.com/JuKu/mmo-proxy-server)
 
 ## Changes to previous version
 
-The previous version was over-engineered with many modules, now there is only one maven module again.
+The previous version was partly over-engineered with many modules, now there is only one maven module again.
 Also the network protocol & types has improved a little bit, because there was some things, they was difficult to implement.
+The serialization method was completely reworked and improved to maintain the server easier.
