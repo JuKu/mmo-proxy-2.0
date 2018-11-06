@@ -21,6 +21,8 @@ And proxy isn't longer responsible for chat messages, anymore.
   - proxy server should be mostly transparent
   - pipeline model with filters for security
   - proxy is responsible for authentification (login & registration)
+  - do as little as possible game logic in proxy server (like region join / leave)
+  - do security completely on proxy server (also get permission roles / groups and send them via join message to game servers)
   
 ## Flowchart
 
