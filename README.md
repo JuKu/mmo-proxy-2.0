@@ -24,4 +24,6 @@ And proxy isn't longer responsible for chat messages, anymore.
   
 ## Flowchart
 
+From **client side**:\
+\
 ![Flowchart](./docs/images/Flowchart.png)
