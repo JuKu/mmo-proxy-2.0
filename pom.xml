@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 	<modules>
-		<module>frontend</module>
+		<module>proxy-server</module>
 	</modules>
 
 	<name>MMO Game Engine - Proxy Server</name>
