@@ -5,6 +5,8 @@ import com.hazelcast.core.ITopic;
 import com.jukusoft.mmo.engine.shared.config.Config;
 import com.jukusoft.mmo.engine.shared.logger.LogListener;
 
+import java.util.Objects;
+
 public class HzLogger implements LogListener {
 
     protected final ITopic<String> topic;
@@ -15,6 +17,7 @@ public class HzLogger implements LogListener {
      * @param hazelcastInstance hazelcast instance
     */
     public HzLogger (HazelcastInstance hazelcastInstance) {
+        Objects.requireNonNull(hazelcastInstance);
         topic = hazelcastInstance.getTopic(Config.get("Hazelcast", "logTopicName"));
     }
 
