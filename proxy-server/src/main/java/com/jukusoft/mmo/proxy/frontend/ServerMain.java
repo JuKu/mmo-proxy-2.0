@@ -68,6 +68,27 @@ public class ServerMain {
         Log.i(CONFIG_TAG, "load configs in directory 'config/'...");
         Config.loadDir(new File("./config/"));
 
+        //overrides config with params
+        for (String param : args) {
+            if (param.startsWith("-Config:")) {
+                param = param.substring(7);
+                String[] array = param.split("=");
+
+                if (array.length < 2) {
+                    throw new IllegalArgumentException("invalide parameter, -Config parameters requires a '=' to set config value.");
+                }
+
+                String[] array1 = array[0].split(".");
+
+                if (array1.length < 2) {
+                    throw new IllegalArgumentException("invalide parameter, -Config parameters requires a '.' in option key to use section.");
+                }
+
+                //set config value
+                Config.set(array1[0], array1[1], array[1]);
+            }
+        }
+
         Log.i(HAZELCAST_TAG, "create new hazelcast instance...");
         HazelcastInstance hazelcastInstance = createHazelcastInstance();
 
