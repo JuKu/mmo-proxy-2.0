@@ -13,6 +13,8 @@ logs
 logs/*
 !logs/.keep
 
+hazelcast*
+
 *.jfr
 
 *.pentaquin
