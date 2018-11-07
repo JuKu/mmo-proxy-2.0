@@ -24,6 +24,13 @@
 			<artifactId>vertx-binary-serializer-connection</artifactId>
 			<version>${vertx.serializer.version}</version>
 		</dependency>
+
+		<!-- shared classes from mmo-engine-client -->
+		<dependency>
+			<groupId>com.jukusoft</groupId>
+			<artifactId>shared-commons-library</artifactId>
+			<version>${shared.library.version}</version>
+		</dependency>
 	</dependencies>
 
 

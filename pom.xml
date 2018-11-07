@@ -64,6 +64,8 @@
 
 		<vertx.serializer.version>1.0.0</vertx.serializer.version>
 
+		<shared.library.version>1.0.0-SNAPSHOT</shared.library.version>
+
 		<!-- don't deploy all modules to maven central, only shared-commons-library -->
 		<maven.deploy.skip>true</maven.deploy.skip>
 
