@@ -9,7 +9,8 @@ temp
 !*pom.xml
 !pom.xml
 
-logs/
+logs
+logs/*
 !logs/.keep
 
 *.jfr
