@@ -1,9 +1,13 @@
 package com.jukusoft.mmo.proxy.frontend;
 
+import com.hazelcast.config.CacheSimpleConfig;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
 import com.jukusoft.mmo.engine.shared.config.Config;
 import com.jukusoft.mmo.engine.shared.logger.Log;
 import com.jukusoft.mmo.engine.shared.utils.Utils;
 import com.jukusoft.mmo.engine.shared.version.Version;
+import com.jukusoft.mmo.proxy.frontend.utils.HazelcastFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +18,7 @@ import java.util.logging.Logger;
 public class ServerMain {
 
     protected static final String VERSION_TAG = "Version";
+    protected static final String CONFIG_TAG = "Config";
 
     public static void main (String[] args) {
         //start game
@@ -37,7 +42,7 @@ public class ServerMain {
             System.exit(0);
         }
 
-        Log.i("Startup", "Started Game Engine.");
+        Log.i("Startup", "Started Proxy Server.");
 
         //set global version
         Version version = new Version(ServerMain.class);
@@ -50,6 +55,20 @@ public class ServerMain {
         Log.i(VERSION_TAG, "Build JDK: " + version.getBuildJdk());
         Log.i(VERSION_TAG, "Build Time: " + version.getBuildTime());
         Log.i(VERSION_TAG, "Vendor ID: " + (!version.getVendor().equals("n/a") ? version.getVendor() : version.getVendorID()));
+
+        //print java version
+        Utils.printSection("Java Version");
+        Log.i("Java", "Java Vendor: " + System.getProperty("java.vendor"));
+        Log.i("Java", "Java Vendor URL: " + System.getProperty("java.vendor.url"));
+        Log.i("Java", "Java Version: " + System.getProperty("java.version"));
+
+        //load all config files
+        Utils.printSection("Configuration & Init");
+        Log.i(CONFIG_TAG, "load configs in directory 'config/'...");
+        Config.loadDir(new File("./config/"));
+
+        Log.i("Hazelcast", "create new hazelcast instance...");
+        HazelcastInstance hazelcastInstance = createHazelcastInstance();
 
         //TODO: add code here
 
@@ -83,6 +102,23 @@ public class ServerMain {
         //force JVM shutdown
         if (Config.forceExit) {
             System.exit(0);
+        }
+    }
+
+    public static HazelcastInstance createHazelcastInstance () {
+        if (Config.getBool("Hazelcast", "standalone")) {
+            //create an new hazelcast instance
+            com.hazelcast.config.Config config = new com.hazelcast.config.Config();
+
+            //disable hazelcast logging
+            config.setProperty("hazelcast.logging.type", "none");
+
+            CacheSimpleConfig cacheConfig = new CacheSimpleConfig();
+            config.getCacheConfigs().put("session-cache", cacheConfig);
+
+            return Hazelcast.newHazelcastInstance(config);
+        } else {
+            return HazelcastFactory.createHzInstanceFromConfig();
         }
     }
 

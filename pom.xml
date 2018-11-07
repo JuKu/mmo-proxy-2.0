@@ -66,6 +66,9 @@
 
 		<shared.library.version>1.0.0-SNAPSHOT</shared.library.version>
 
+		<!-- hazelcast version -->
+		<hazelcast.version>3.11</hazelcast.version>
+
 		<!-- don't deploy all modules to maven central, only shared-commons-library -->
 		<maven.deploy.skip>true</maven.deploy.skip>
 

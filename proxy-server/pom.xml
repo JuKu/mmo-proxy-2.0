@@ -31,6 +31,27 @@
 			<artifactId>shared-commons-library</artifactId>
 			<version>${shared.library.version}</version>
 		</dependency>
+
+		<!-- JCache -->
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<!-- Hazelcast -->
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast</artifactId>
+			<version>${hazelcast.version}</version>
+		</dependency>
+
+		<!-- Hazelcast client -->
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast-client</artifactId>
+			<version>${hazelcast.version}</version>
+		</dependency>
 	</dependencies>
 
 
