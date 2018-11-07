@@ -19,6 +19,7 @@ public class ServerMain {
 
     protected static final String VERSION_TAG = "Version";
     protected static final String CONFIG_TAG = "Config";
+    protected static final String HAZELCAST_TAG = "Hazelcast";
 
     public static void main (String[] args) {
         //start game
@@ -67,8 +68,10 @@ public class ServerMain {
         Log.i(CONFIG_TAG, "load configs in directory 'config/'...");
         Config.loadDir(new File("./config/"));
 
-        Log.i("Hazelcast", "create new hazelcast instance...");
+        Log.i(HAZELCAST_TAG, "create new hazelcast instance...");
         HazelcastInstance hazelcastInstance = createHazelcastInstance();
+
+        Log.i(HAZELCAST_TAG, "hazelcast started successfully.");
 
         //TODO: add code here
 
@@ -106,7 +109,7 @@ public class ServerMain {
     }
 
     public static HazelcastInstance createHazelcastInstance () {
-        if (Config.getBool("Hazelcast", "standalone")) {
+        if (Config.getBool(HAZELCAST_TAG, "standalone")) {
             //create an new hazelcast instance
             com.hazelcast.config.Config config = new com.hazelcast.config.Config();
 

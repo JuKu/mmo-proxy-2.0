@@ -15,6 +15,7 @@ Also the network protocol & types has improved a little bit, because there was s
 The serialization method was completely reworked and improved to maintain the server easier. Also we introduced a new pileline model.
 Additionally we have removed the "cid" field in network protocol, because it was completely redundant, every proxy - game server connection is for only one client on one region (we don't use multiplexing, because this causes new problems and isn't easy to perform very well).
 And proxy isn't longer responsible for chat messages, anymore.
+Also it is more independent from game server, they don't share the same database anymore.
 
 ## General Aspects
 
