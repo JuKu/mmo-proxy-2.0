@@ -99,7 +99,7 @@ public class ServerMain {
 
         Log.i(HAZELCAST_TAG, "hazelcast started successfully.");
 
-        //attach hazelcast logger
+        //create and attach hazelcast logger
         Log.i("Logging", "enable hazelcast cluster logging...");
         HzLogger hzLogger = new HzLogger(hazelcastInstance);
         LogWriter.attachListener(hzLogger);
