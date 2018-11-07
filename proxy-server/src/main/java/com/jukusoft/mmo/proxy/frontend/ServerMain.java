@@ -9,11 +9,14 @@ import com.jukusoft.mmo.engine.shared.logger.LogWriter;
 import com.jukusoft.mmo.engine.shared.utils.Utils;
 import com.jukusoft.mmo.engine.shared.version.Version;
 import com.jukusoft.mmo.proxy.frontend.log.HzLogger;
+import com.jukusoft.mmo.proxy.frontend.utils.EncryptionUtils;
 import com.jukusoft.mmo.proxy.frontend.utils.HazelcastFactory;
 import io.vertx.core.Vertx;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -103,6 +106,19 @@ public class ServerMain {
         Log.i("Logging", "enable hazelcast cluster logging...");
         HzLogger hzLogger = new HzLogger(hazelcastInstance);
         LogWriter.attachListener(hzLogger);
+
+        //generate RSA key pair
+        Log.i("Security", "generate RSA key pair...");
+        KeyPair keyPair = null;
+
+        try {
+            keyPair = EncryptionUtils.generateKeyPair();
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("Security", "NoSuchAlgorithmException: ", e);
+            Log.shutdown();
+            Thread.sleep(5000);
+            System.exit(1);
+        }
 
         //create vert.x instance
         Log.i("Vertx", "Create vertx.io instance...");
