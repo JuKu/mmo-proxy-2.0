@@ -16,6 +16,8 @@ logs/*
 hazelcast*
 config/hazelcast.cfg
 *hazelcast.cfg
+!config/hazelcast-example.cfg
+!*hazelcast-example.cfg
 
 *.jfr
 
