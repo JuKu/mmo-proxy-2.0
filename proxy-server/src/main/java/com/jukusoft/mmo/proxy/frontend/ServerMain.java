@@ -5,9 +5,12 @@ import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.jukusoft.mmo.engine.shared.config.Config;
 import com.jukusoft.mmo.engine.shared.logger.Log;
+import com.jukusoft.mmo.engine.shared.logger.LogWriter;
 import com.jukusoft.mmo.engine.shared.utils.Utils;
 import com.jukusoft.mmo.engine.shared.version.Version;
+import com.jukusoft.mmo.proxy.frontend.log.HzLogger;
 import com.jukusoft.mmo.proxy.frontend.utils.HazelcastFactory;
+import io.vertx.core.Vertx;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,6 +98,17 @@ public class ServerMain {
         HazelcastInstance hazelcastInstance = createHazelcastInstance();
 
         Log.i(HAZELCAST_TAG, "hazelcast started successfully.");
+
+        //attach hazelcast logger
+        Log.i("Logging", "enable hazelcast cluster logging...");
+        HzLogger hzLogger = new HzLogger(hazelcastInstance);
+        LogWriter.attachListener(hzLogger);
+
+        //create vert.x instance
+        Log.i("Vertx", "Create vertx.io instance...");
+        VertxManager vertxManager = new VertxManager();
+        vertxManager.init(hazelcastInstance);
+        Vertx vertx = vertxManager.getVertx();
 
         //TODO: add code here
 
