@@ -9,6 +9,7 @@ import com.jukusoft.mmo.engine.shared.logger.LogWriter;
 import com.jukusoft.mmo.engine.shared.utils.Utils;
 import com.jukusoft.mmo.engine.shared.version.Version;
 import com.jukusoft.mmo.proxy.frontend.log.HzLogger;
+import com.jukusoft.mmo.proxy.frontend.network.ProxyServer;
 import com.jukusoft.mmo.proxy.frontend.utils.EncryptionUtils;
 import com.jukusoft.mmo.proxy.frontend.utils.HazelcastFactory;
 import io.vertx.core.Vertx;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +28,7 @@ public class ServerMain {
     protected static final String VERSION_TAG = "Version";
     protected static final String CONFIG_TAG = "Config";
     protected static final String HAZELCAST_TAG = "Hazelcast";
+    protected static final String NETWORK_TAG = "Network";
 
     public static void main (String[] args) {
         //start game
@@ -126,7 +129,46 @@ public class ServerMain {
         vertxManager.init(hazelcastInstance);
         Vertx vertx = vertxManager.getVertx();
 
-        //TODO: add code here
+        //start proxy server
+        ProxyServer proxyServer = new ProxyServer(vertx);
+        String host = Config.get("Proxy", "host");
+        int port = Config.getInt("Proxy", "port");
+        Log.i(NETWORK_TAG, "start proxy server on host " + host + " on port " + port + ".");
+
+        AtomicBoolean started = new AtomicBoolean(false);
+        AtomicBoolean error = new AtomicBoolean(false);
+
+        proxyServer.start(host, port, res -> {
+            started.set(true);
+
+            if (res.succeeded()) {
+                Log.i(NETWORK_TAG, "proxy server started successfully.");
+                error.set(false);
+            } else {
+                Log.e(NETWORK_TAG, "Couldn't start proxy server: ", res.cause());
+                error.set(true);
+            }
+        });
+
+        //wait while server is starting
+        while (!started.get()) {
+            Thread.sleep(100);
+        }
+
+        Log.i(NETWORK_TAG, "proxy server is ready now.");
+
+        if (!error.get()) {
+            Utils.printSection("Running");
+
+            //wait
+            Thread thread = Thread.currentThread();
+            thread.setName("main");
+            thread.wait();
+        }
+
+        /**
+        * shutdown process
+        */
 
         //list currently active threads
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
@@ -135,11 +177,14 @@ public class ServerMain {
         Utils.printSection("Shutdown");
         Log.i("Shutdown", "Shutdown now.");
 
+        //shutdown vertx
+        vertxManager.shutdown();
+
         //shutdown logger and write all remaining logs to file
         Log.shutdown();
 
         //wait 200ms, so logs can be written to file
-        Thread.sleep(200);
+        Thread.sleep(500);
 
         //check, if there are other active threads, except the main thread
         if (threadSet.size() > 1) {

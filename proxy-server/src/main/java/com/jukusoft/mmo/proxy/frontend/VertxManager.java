@@ -1,6 +1,7 @@
 package com.jukusoft.mmo.proxy.frontend;
 
 import com.hazelcast.core.HazelcastInstance;
+import com.jukusoft.mmo.engine.shared.config.Config;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.spi.cluster.ClusterManager;
@@ -33,6 +34,14 @@ public class VertxManager {
 
         //create new vertx.io options
         this.vertxOptions = new VertxOptions();
+
+        //set thread count
+        vertxOptions.setEventLoopPoolSize(Config.getInt("Proxy", "eventThreads"));
+        vertxOptions.setWorkerPoolSize(Config.getInt("Proxy", "workerThreads"));
+
+        //set thread pool timeouts
+        vertxOptions.setMaxEventLoopExecuteTime(Config.getInt("Proxy", "maxEventLoopExecuteTime"));
+        vertxOptions.setMaxWorkerExecuteTime(Config.getInt("Proxy", "maxWorkerExecuteTime"));
 
         //use clustered mode of vert.x
         this.vertxOptions.setClustered(true);
