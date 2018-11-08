@@ -14,8 +14,10 @@ import com.jukusoft.mmo.proxy.frontend.utils.EncryptionUtils;
 import com.jukusoft.mmo.proxy.frontend.utils.HazelcastFactory;
 import io.vertx.core.Vertx;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.util.Set;
@@ -163,7 +165,21 @@ public class ServerMain {
             //wait
             Thread thread = Thread.currentThread();
             thread.setName("main");
-            thread.wait();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+            Log.i("CLI", "command line input is accepted yet. Quit server with 'quit' and ENTER.");
+
+            while (!Thread.interrupted()) {
+                //read line
+                String line = reader.readLine();
+
+                if (line.equals("quit") || line.equals("exit")) {
+                    break;
+                }
+
+                System.out.println("Unsupported command: " + line);
+            }
         }
 
         /**
