@@ -157,7 +157,7 @@ public class ServerMain {
             Thread.sleep(100);
         }
 
-        Log.i(NETWORK_TAG, "proxy server is ready now.");
+        Log.i(NETWORK_TAG, "proxy server is running yet.");
 
         if (!error.get()) {
             Utils.printSection("Running");
