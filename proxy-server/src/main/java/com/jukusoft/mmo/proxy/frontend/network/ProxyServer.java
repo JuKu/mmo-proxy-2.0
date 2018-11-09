@@ -3,8 +3,6 @@ package com.jukusoft.mmo.proxy.frontend.network;
 import com.jukusoft.mmo.engine.shared.config.Config;
 import com.jukusoft.mmo.engine.shared.logger.Log;
 import com.jukusoft.mmo.proxy.frontend.Const;
-import com.jukusoft.vertx.connection.clientserver.ClientConnectionImpl;
-import com.jukusoft.vertx.connection.clientserver.Server;
 import com.jukusoft.vertx.connection.stream.BufferStream;
 import com.jukusoft.vertx.serializer.utils.ByteUtils;
 import io.vertx.core.AsyncResult;
