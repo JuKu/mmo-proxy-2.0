@@ -80,7 +80,7 @@ public class ProxyServer {
 
             //check, if type has to be handled from proxy server itself
             if (Const.PROXY_HANDLER_TYPES[type]) {
-                if (this.listeners[extendedType] == null) {
+                if (this.listeners[extendedType] != null) {
                     try {
                         //call message handler
                         this.listeners[extendedType].onMessage(buffer, state, gsConnectionManager);
