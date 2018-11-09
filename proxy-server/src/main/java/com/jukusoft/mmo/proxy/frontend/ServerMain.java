@@ -8,6 +8,7 @@ import com.jukusoft.mmo.engine.shared.logger.Log;
 import com.jukusoft.mmo.engine.shared.logger.LogWriter;
 import com.jukusoft.mmo.engine.shared.utils.Utils;
 import com.jukusoft.mmo.engine.shared.version.Version;
+import com.jukusoft.mmo.proxy.frontend.handler.PublicKeyRequestHandler;
 import com.jukusoft.mmo.proxy.frontend.log.HzLogger;
 import com.jukusoft.mmo.proxy.frontend.network.ProxyServer;
 import com.jukusoft.mmo.proxy.frontend.utils.EncryptionUtils;
@@ -139,6 +140,9 @@ public class ServerMain {
 
         AtomicBoolean started = new AtomicBoolean(false);
         AtomicBoolean error = new AtomicBoolean(false);
+
+        //register handlers
+        proxyServer.addMessageListener(new PublicKeyRequestHandler(keyPair.getPublic()));
 
         proxyServer.start(host, port, res -> {
             started.set(true);
