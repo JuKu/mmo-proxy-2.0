@@ -30,6 +30,8 @@ public class ProxyServer {
     //message listeners for client - proxy messages with type 0x01
     protected MessageListener[] listeners = new MessageListener[256];
 
+    protected static final String MESSAGE_TAG = "Message";
+
     /**
     * default constructor
      *
@@ -85,15 +87,15 @@ public class ProxyServer {
                         //call message handler
                         this.listeners[extendedType].onMessage(buffer, state, gsConnectionManager);
                     } catch (Exception e) {
-                        Log.w("Message", "[" + socket.remoteAddress().host() + ":" + socket.remoteAddress().port() + "] Exception while handle message (" + ByteUtils.byteToHex(type) + ", " + ByteUtils.byteToHex(extendedType) + "): ", e);
+                        Log.w(MESSAGE_TAG, "[" + socket.remoteAddress().host() + ":" + socket.remoteAddress().port() + "] Exception while handle message (" + ByteUtils.byteToHex(type) + ", " + ByteUtils.byteToHex(extendedType) + "): ", e);
                     }
                 } else {
-                    Log.w("Message Handler", "no message listener registered for type " + ByteUtils.byteToHex(type) + ", extendedType " + ByteUtils.byteToHex(extendedType) + ", drop message.");
+                    Log.w(MESSAGE_TAG, "no message listener registered for type " + ByteUtils.byteToHex(type) + ", extendedType " + ByteUtils.byteToHex(extendedType) + ", drop message.");
                 }
             } else {
                 //check login first
                 if (!state.isLoggedIn()) {
-                    Log.w("Message", "[" + socket.remoteAddress().host() + ":" + socket.remoteAddress().port() + "] drop message with type " + ByteUtils.byteToHex(type) + ", because user isn't logged in.");
+                    Log.w(MESSAGE_TAG, "[" + socket.remoteAddress().host() + ":" + socket.remoteAddress().port() + "] drop message with type " + ByteUtils.byteToHex(type) + ", because user isn't logged in.");
                     return;
                 }
 
