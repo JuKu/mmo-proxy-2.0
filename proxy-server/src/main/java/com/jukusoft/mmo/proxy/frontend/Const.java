@@ -13,4 +13,8 @@ public class Const {
         PROXY_HANDLER_TYPES[0x01] = true;
     }
 
+    protected Const () {
+        //
+    }
+
 }
