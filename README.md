@@ -37,6 +37,27 @@ Also it is more independent from game server, they don't share the same database
   - do as little as possible game logic in proxy server (like region join / leave)
   - do security completely on proxy server (also get permission roles / groups and send them via join message to game servers)
   
+## Network Protocol
+
+  - 1 integer package size (**will be removed from payload data**)
+  - 1 byte type
+  - 1 byte extendedType (will not be parsed by proxy server
+  - 1 short (2 byte) version (protocol version)
+  - payload data (redirected to game servers)
+
+**Type 0x01 is reserved for client - proxy server communication** (authorization, encryption, character selection and so on).
+
+## Reserved types
+
+  - 0x01 authorization & initialization - client - proxy connection (login, registration, encryption, RTT, character selection and so on)
+      * 0x01 send key pair
+      
+| **type**  | **extended type**  | **direction (client - proxy)**  | **description**   | **login required**  | **implemented?**  |
+|---|---|---|---|---|---|
+| **0x01**  | 0x01  | client <-- proxy  | send RSA public key to client, so he can encrypt login data  | -  | -  |
+| 0x01  | 0x02  | client <--> proxy  | RTT - round trip time (message to determine client ping) | -  | -  |
+| 0x01  | 0x03  | client --> proxy  | login request (with login data and client version)  | -  | x  |
+  
 ## Flowchart
 
 **server side**:\

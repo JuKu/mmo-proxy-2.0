@@ -10,7 +10,8 @@ public interface MessageListener {
      *
      * @param buffer message buffer
      * @param state current connection state, e.q. if user is logged in
+     * @param gsConn game server connection manager
     */
-    public void onMessage (Buffer buffer, ConnState state);
+    public void onMessage (Buffer buffer, ConnState state, GSConnectionManager gsConn) throws Exception;
 
 }

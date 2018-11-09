@@ -10,4 +10,8 @@ public class ConnState {
         return false;
     }
 
+    public void cleanUp () {
+        //
+    }
+
 }
