@@ -24,6 +24,7 @@ import com.jukusoft.mmo.proxy.frontend.utils.EncryptionUtils;
 import com.jukusoft.mmo.proxy.frontend.utils.HazelcastFactory;
 import com.jukusoft.vertx.serializer.TypeLookup;
 import io.vertx.core.Vertx;
+import org.apache.log4j.BasicConfigurator;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -55,6 +56,9 @@ public class ServerMain {
     }
 
     protected static void start (String[] args) throws Exception {
+        //configure log4j for netty and hide all netty logs
+        BasicConfigurator.configure(new DummyAppender());
+
         //load logger config
         try {
             Config.load(new File("./config/logger.cfg"));
