@@ -42,6 +42,7 @@ public class ServerMain {
     protected static final String CONFIG_TAG = "Config";
     protected static final String HAZELCAST_TAG = "Hazelcast";
     protected static final String NETWORK_TAG = "Network";
+    protected static final String DATABASE_TAG = "Database";
 
     public static void main (String[] args) {
         //start game
@@ -123,21 +124,21 @@ public class ServerMain {
         HzLogger hzLogger = new HzLogger(hazelcastInstance);
         LogWriter.attachListener(hzLogger);
 
-        //Utils.printSection("Database");
-        Log.i("Database", "initialize MySQL config...");
+        //Utils.printSection(DATABASE_TAG);
+        Log.i(DATABASE_TAG, "initialize MySQL config...");
 
         //load mysql config
         MySQLConfig mySQLConfig = new MySQLConfig();
         mySQLConfig.load();
 
-        Log.i("Database", "execute database upgrader...");
+        Log.i(DATABASE_TAG, "execute database upgrader...");
 
         //create or upgrade database schema
         DatabaseUpgrader databaseUpgrader = new DatabaseUpgrader(mySQLConfig);
         databaseUpgrader.migrate();
         System.out.println(databaseUpgrader.getInfo());
 
-        Log.i("Database", "initialize database connection...");
+        Log.i(DATABASE_TAG, "initialize database connection...");
 
         //initialize database
         Database.init(mySQLConfig);
