@@ -1,6 +1,5 @@
 package com.jukusoft.mmo.proxy.frontend.network;
 
-import com.jukusoft.vertx.connection.stream.BufferStream;
 import io.vertx.core.buffer.Buffer;
 
 @FunctionalInterface

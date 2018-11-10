@@ -13,7 +13,6 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.net.NetServer;
 import io.vertx.core.net.NetServerOptions;
 import io.vertx.core.net.NetSocket;
@@ -73,6 +72,8 @@ public class ProxyServer {
 
         //pause reading data
         bufferStream.pause();
+
+        Log.i("Connect", "new client connection: " + socket.remoteAddress().host() + ":" + socket.remoteAddress().port() + "");
 
         //TODO: check ip blacklist / firewall
 

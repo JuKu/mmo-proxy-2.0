@@ -6,6 +6,8 @@ import com.hazelcast.core.HazelcastInstance;
 import com.jukusoft.mmo.engine.shared.config.Config;
 import com.jukusoft.mmo.engine.shared.logger.Log;
 import com.jukusoft.mmo.engine.shared.logger.LogWriter;
+import com.jukusoft.mmo.engine.shared.messages.PublicKeyRequest;
+import com.jukusoft.mmo.engine.shared.messages.PublicKeyResponse;
 import com.jukusoft.mmo.engine.shared.utils.Utils;
 import com.jukusoft.mmo.engine.shared.version.Version;
 import com.jukusoft.mmo.proxy.frontend.handler.PublicKeyRequestHandler;
@@ -13,6 +15,7 @@ import com.jukusoft.mmo.proxy.frontend.log.HzLogger;
 import com.jukusoft.mmo.proxy.frontend.network.ProxyServer;
 import com.jukusoft.mmo.proxy.frontend.utils.EncryptionUtils;
 import com.jukusoft.mmo.proxy.frontend.utils.HazelcastFactory;
+import com.jukusoft.vertx.serializer.TypeLookup;
 import io.vertx.core.Vertx;
 
 import java.io.BufferedReader;
@@ -140,6 +143,10 @@ public class ServerMain {
 
         AtomicBoolean started = new AtomicBoolean(false);
         AtomicBoolean error = new AtomicBoolean(false);
+
+        //register message types
+        TypeLookup.register(PublicKeyRequest.class);
+        TypeLookup.register(PublicKeyResponse.class);
 
         //register handlers
         proxyServer.addMessageListener(new PublicKeyRequestHandler(keyPair.getPublic()));
