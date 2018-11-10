@@ -19,7 +19,7 @@ public class MySQLConfig {
         //
     }
 
-    protected void load () {
+    public void load () {
         this.host = Config.get("MySQL", "host");
         this.port = Config.getInt("MySQL", "port");
         this.database = Config.get("MySQL", "database");

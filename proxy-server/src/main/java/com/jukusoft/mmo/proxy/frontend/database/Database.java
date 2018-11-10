@@ -45,7 +45,7 @@ public class Database {
 
         dataSource = new HikariDataSource(config);
 
-        Log.i(LOG_TAG, "Connection established.");
+        Log.i(LOG_TAG, "connection established.");
     }
 
     public static HikariDataSource getDataSource () {

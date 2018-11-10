@@ -12,6 +12,9 @@ import com.jukusoft.mmo.engine.shared.messages.PublicKeyRequest;
 import com.jukusoft.mmo.engine.shared.messages.PublicKeyResponse;
 import com.jukusoft.mmo.engine.shared.utils.Utils;
 import com.jukusoft.mmo.engine.shared.version.Version;
+import com.jukusoft.mmo.proxy.frontend.database.Database;
+import com.jukusoft.mmo.proxy.frontend.database.DatabaseUpgrader;
+import com.jukusoft.mmo.proxy.frontend.database.MySQLConfig;
 import com.jukusoft.mmo.proxy.frontend.handler.LoginRequestHandler;
 import com.jukusoft.mmo.proxy.frontend.handler.PublicKeyRequestHandler;
 import com.jukusoft.mmo.proxy.frontend.handler.RTTRequestHandler;
@@ -119,6 +122,25 @@ public class ServerMain {
         Log.i("Logging", "enable hazelcast cluster logging...");
         HzLogger hzLogger = new HzLogger(hazelcastInstance);
         LogWriter.attachListener(hzLogger);
+
+        //Utils.printSection("Database");
+        Log.i("Database", "initialize MySQL config...");
+
+        //load mysql config
+        MySQLConfig mySQLConfig = new MySQLConfig();
+        mySQLConfig.load();
+
+        Log.i("Database", "execute database upgrader...");
+
+        //create or upgrade database schema
+        DatabaseUpgrader databaseUpgrader = new DatabaseUpgrader(mySQLConfig);
+        databaseUpgrader.migrate();
+        System.out.println(databaseUpgrader.getInfo());
+
+        Log.i("Database", "initialize database connection...");
+
+        //initialize database
+        Database.init(mySQLConfig);
 
         //generate RSA key pair
         Log.i("Security", "generate RSA key pair...");
