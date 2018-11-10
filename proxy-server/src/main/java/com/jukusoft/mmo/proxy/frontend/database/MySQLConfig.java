@@ -16,7 +16,7 @@ public class MySQLConfig {
     protected int prepStmtCacheSqlLimit = 2048;
 
     public MySQLConfig() {
-        this.load();
+        //
     }
 
     protected void load () {
