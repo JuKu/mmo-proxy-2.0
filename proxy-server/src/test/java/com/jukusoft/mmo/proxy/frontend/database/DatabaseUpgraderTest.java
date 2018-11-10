@@ -42,10 +42,10 @@ public class DatabaseUpgraderTest {
         //https://docs.travis-ci.com/user/database-setup/#MySQL
 
         if (new File("../config/mysql.cfg").exists()) {
-            Config.load(new File("../config/mysql.cfg"));
+            Config.load(new File("../config/mysql.cfg"), false);
             mySQLConfig.load();
         } else {
-            Config.load(new File("../config/tests/travis.mysql.cfg"));
+            Config.load(new File("../config/tests/travis.mysql.cfg"), false);
             mySQLConfig.load();
         }
 
