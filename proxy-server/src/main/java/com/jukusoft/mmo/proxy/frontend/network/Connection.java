@@ -13,12 +13,12 @@ public class Connection {
         this.bufferStream = bufferStream;
     }
 
-    protected void send (Buffer buffer) {
+    public void sendRaw (Buffer buffer) {
         this.bufferStream.write(buffer);
     }
 
     public void send (SerializableObject msg) {
-        this.send(Serializer.serialize(msg));
+        this.sendRaw(Serializer.serialize(msg));
     }
 
     /**

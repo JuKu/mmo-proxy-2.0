@@ -11,6 +11,7 @@ import com.jukusoft.mmo.engine.shared.messages.PublicKeyResponse;
 import com.jukusoft.mmo.engine.shared.utils.Utils;
 import com.jukusoft.mmo.engine.shared.version.Version;
 import com.jukusoft.mmo.proxy.frontend.handler.PublicKeyRequestHandler;
+import com.jukusoft.mmo.proxy.frontend.handler.RTTRequestHandler;
 import com.jukusoft.mmo.proxy.frontend.log.HzLogger;
 import com.jukusoft.mmo.proxy.frontend.network.ProxyServer;
 import com.jukusoft.mmo.proxy.frontend.utils.EncryptionUtils;
@@ -150,6 +151,7 @@ public class ServerMain {
 
         //register handlers
         proxyServer.addMessageListener(new PublicKeyRequestHandler(keyPair.getPublic()));
+        proxyServer.addMessageListener(new RTTRequestHandler());
 
         proxyServer.start(host, port, res -> {
             started.set(true);

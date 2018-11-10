@@ -31,7 +31,7 @@ public class PublicKeyRequestHandler implements MessageListener {
         PublicKeyResponse response = new PublicKeyResponse(publicKey);
 
         //log event
-        Log.d("PublicKey", "send public key request.");
+        Log.d("PublicKey", "send public key response.");
 
         //send public key to client
         clientConn.send(response);
