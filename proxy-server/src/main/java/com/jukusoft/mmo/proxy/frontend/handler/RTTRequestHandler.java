@@ -19,12 +19,12 @@ public class RTTRequestHandler implements MessageListener {
     public void onMessage(Buffer buffer, ConnState state, Connection clientConn, GSConnectionManager gsConn) {
         //send RTT response
         Buffer msg = Buffer.buffer(4);
-        buffer.appendByte((byte) 0x01);
-        buffer.appendByte((byte) 0x02);
-        buffer.appendShort((short) 1);
+        msg.appendByte((byte) 0x01);
+        msg.appendByte((byte) 0x02);
+        msg.appendShort((short) 1);
 
         //send message to client
-        clientConn.sendRaw(buffer);
+        clientConn.sendRaw(msg);
     }
 
 }
