@@ -83,6 +83,12 @@
 		<!-- hazelcast version -->
 		<hazelcast.version>3.11</hazelcast.version>
 
+		<!-- mysql connector version -->
+		<mysql.connector.version>6.0.6</mysql.connector.version>
+
+		<!-- mysql connection pooling 1-->
+		<hikaricp.version>3.2.0</hikaricp.version>
+
 		<!-- ldap junit tests -->
 		<embedded-ldap-junit.version>0.6</embedded-ldap-junit.version>
 
