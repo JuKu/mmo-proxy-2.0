@@ -17,6 +17,7 @@ public class HazelcastFactory {
         ClientConfig clientConfig = new ClientConfig();
         clientConfig.getGroupConfig().setName(user).setPassword(password);
         clientConfig.getNetworkConfig().addAddress(ip + ":" + port);
+        clientConfig.setProperty("hazelcast.application.validation.token", Config.get("Hazelcast", "token"));
         return HazelcastClient.newHazelcastClient(clientConfig);
     }
 
