@@ -26,6 +26,7 @@ public class HazelcastFactoryTest {
         Config.set("Hazelcast", "port", "5710");
         Config.set("Hazelcast", "user", "test");
         Config.set("Hazelcast", "password", "test");
+        Config.set("Hazelcast", "token", "test-token");
 
         HazelcastInstance hz = HazelcastFactory.createHzInstanceFromConfig();
         System.err.println("started hazelcast client.");
