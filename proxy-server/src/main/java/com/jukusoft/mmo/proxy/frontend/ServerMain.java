@@ -6,10 +6,13 @@ import com.hazelcast.core.HazelcastInstance;
 import com.jukusoft.mmo.engine.shared.config.Config;
 import com.jukusoft.mmo.engine.shared.logger.Log;
 import com.jukusoft.mmo.engine.shared.logger.LogWriter;
+import com.jukusoft.mmo.engine.shared.messages.LoginRequest;
+import com.jukusoft.mmo.engine.shared.messages.LoginResponse;
 import com.jukusoft.mmo.engine.shared.messages.PublicKeyRequest;
 import com.jukusoft.mmo.engine.shared.messages.PublicKeyResponse;
 import com.jukusoft.mmo.engine.shared.utils.Utils;
 import com.jukusoft.mmo.engine.shared.version.Version;
+import com.jukusoft.mmo.proxy.frontend.handler.LoginRequestHandler;
 import com.jukusoft.mmo.proxy.frontend.handler.PublicKeyRequestHandler;
 import com.jukusoft.mmo.proxy.frontend.handler.RTTRequestHandler;
 import com.jukusoft.mmo.proxy.frontend.log.HzLogger;
@@ -148,10 +151,13 @@ public class ServerMain {
         //register message types
         TypeLookup.register(PublicKeyRequest.class);
         TypeLookup.register(PublicKeyResponse.class);
+        TypeLookup.register(LoginRequest.class);
+        TypeLookup.register(LoginResponse.class);
 
         //register handlers
         proxyServer.addMessageListener(new PublicKeyRequestHandler(keyPair.getPublic()));
         proxyServer.addMessageListener(new RTTRequestHandler());
+        proxyServer.addMessageListener(new LoginRequestHandler());
 
         proxyServer.start(host, port, res -> {
             started.set(true);
