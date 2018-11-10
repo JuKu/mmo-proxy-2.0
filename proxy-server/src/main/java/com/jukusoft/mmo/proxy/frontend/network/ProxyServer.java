@@ -35,6 +35,7 @@ public class ProxyServer {
     protected MessageListener[] listeners = new MessageListener[256];
 
     protected static final String MESSAGE_TAG = "Message";
+    protected static final String CONNECT_TAG = "Connect";
 
     /**
     * default constructor
@@ -73,7 +74,7 @@ public class ProxyServer {
         //pause reading data
         bufferStream.pause();
 
-        Log.i("Connect", "new client connection: " + socket.remoteAddress().host() + ":" + socket.remoteAddress().port() + "");
+        Log.i(CONNECT_TAG, "new client connection: " + socket.remoteAddress().host() + ":" + socket.remoteAddress().port() + "");
 
         //TODO: check ip blacklist / firewall
 
@@ -111,6 +112,8 @@ public class ProxyServer {
         });
 
         bufferStream.endHandler(v -> {
+            Log.i(CONNECT_TAG, "connection closed: " + socket.remoteAddress().host() + ":" + socket.remoteAddress().port() + "");
+
             connection.close();
 
             //close all connections to game server
