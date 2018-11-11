@@ -54,9 +54,9 @@ Also it is more independent from game server, they don't share the same database
       
 | **type**  | **extended type**  | **direction (client - proxy)**  | **description**   | **login required**  | **implemented?**  |
 |---|---|---|---|---|---|
-| **0x01**  | 0x01  | (2) client <--> proxy (1)  | request / send RSA public key to client, so he can encrypt login data  | -  | -  |
-| 0x01  | 0x02  | (1) client <--> proxy (2)  | RTT - round trip time (message to determine client ping) | -  | -  |
-| 0x01  | 0x03  | client --> proxy  | login request (with login data and client version)  | -  | x  |
+| **0x01**  | 0x01  | (2) client <--> proxy (1)  | request / send RSA public key to client, so he can encrypt login data  | -  | x  |
+| 0x01  | 0x02  | (1) client <--> proxy (2)  | RTT - round trip time (message to determine client ping) | -  | x  |
+| 0x01  | 0x03  | client <--> proxy  | login request / response (with login data and client version)  | -  | x  |
   
 ## Flowchart
 
