@@ -35,7 +35,17 @@ public class LoginRequestHandler implements MessageListener {
     @Override
     public void onMessage(Buffer buffer, ConnState state, Connection clientConn, GSConnectionManager gsConn) throws Exception {
         LoginRequest req = Serializer.unserialize(buffer, LoginRequest.class);
-        Log.i("Login", "login request received.");
+        Log.i(LOG_TAG, "login request received.");
+
+        //check, if user is allowed to login again or has reached max login retries
+        if (!state.retryLogin()) {
+            Log.w(LOG_TAG, "[" + clientConn.host() + ":" + clientConn.port() + "] user has tried to login too often, close connection now.");
+            clientConn.close();
+
+            //TODO: block user temporary in database
+
+            return;
+        }
 
         LoginResponse response = Pools.get(LoginResponse.class);
 
