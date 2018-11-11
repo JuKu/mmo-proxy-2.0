@@ -34,7 +34,7 @@ public class ConnState {
     }
 
     public boolean retryLogin () {
-        if (this.loginRetries > Config.getInt("Security", "maxLoginRetries")) {
+        if (this.loginRetries >= Config.getInt("Security", "maxLoginRetries")) {
             //user isn't allowed to login again
             return false;
         }
