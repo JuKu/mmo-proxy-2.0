@@ -61,6 +61,7 @@ public class LoginRequestHandler implements MessageListener {
             username = json.getString("username");
             password = json.getString("password");
         } catch (Exception e) {
+            //log exception
             Log.w(LOG_TAG, "[" + clientConn.host() + ":" + clientConn.port() + "] Exception while decrypting login credentials: ", e);
 
             //internal server error
