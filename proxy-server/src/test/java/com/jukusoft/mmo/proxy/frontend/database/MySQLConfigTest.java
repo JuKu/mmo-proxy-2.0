@@ -1,6 +1,8 @@
 package com.jukusoft.mmo.proxy.frontend.database;
 
 import com.jukusoft.mmo.engine.shared.config.Config;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -9,6 +11,18 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 public class MySQLConfigTest {
+
+    @BeforeClass
+    public static void beforeClass () {
+        //clear in-memory config first
+        Config.clear();
+    }
+
+    @AfterClass
+    public static void afterClass () {
+        //clear in-memory config first
+        Config.clear();
+    }
 
     @Test
     public void testContructor () {
