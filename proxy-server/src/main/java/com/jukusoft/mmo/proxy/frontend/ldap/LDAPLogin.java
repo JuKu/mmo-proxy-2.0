@@ -8,8 +8,6 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,8 +24,8 @@ public class LDAPLogin {
     protected int port = 389;
     protected boolean ssl = false;
 
-    protected String user_prefix = "";
-    protected String user_suffix = "";
+    protected String userPrefix = "";
+    protected String userSuffix = "";
 
     protected static final String INSERT_QUERY = String.format("INSERT INTO `mmo_users` (   `userID`, `username`, `ip`, `online`, `last_online`, `activated`) VALUES (   NULL, ?, ?, '1', CURRENT_TIMESTAMP, '1') ON DUPLICATE KEY UPDATE `ip` = ?, `online` = '1', `last_online` = NOW();");
     protected static final String SELECT_QUERY = String.format("SELECT * FROM `mmo_users` WHERE `username` = ?; ");
@@ -38,8 +36,8 @@ public class LDAPLogin {
         this.host = Config.get("LDAP", "host");
         this.port = Config.getInt("LDAP", "port");
         this.ssl = Config.getBool("LDAP", "ssl");
-        this.user_prefix = Config.get("LDAP", "user_prefix");
-        this.user_suffix = Config.get("LDAP", "user_suffix");
+        this.userPrefix = Config.get("LDAP", "user_prefix");
+        this.userSuffix = Config.get("LDAP", "user_suffix");
     }
 
     public int login(String username, String password, String ip) {
@@ -55,7 +53,7 @@ public class LDAPLogin {
         }
 
         //generate userDN
-        String userDn = this.user_prefix + username.replace(",", "") + this.user_suffix;
+        String userDn = this.userPrefix + username.replace(",", "") + this.userSuffix;
         Log.i(LOG_TAG, "ldap server: " + host + ":" + port);
         Log.i(LOG_TAG, "try to login ldap user: " + userDn);
 

@@ -4,6 +4,8 @@ import com.jukusoft.mmo.engine.shared.config.Config;
 
 public class MySQLConfig {
 
+    protected static final String SECTION_NAME = "MySQL";
+
     protected String host = "locahost";
     protected int port = 3306;
     protected String database = "";
@@ -20,16 +22,16 @@ public class MySQLConfig {
     }
 
     public void load () {
-        this.host = Config.get("MySQL", "host");
-        this.port = Config.getInt("MySQL", "port");
-        this.database = Config.get("MySQL", "database");
-        this.user = Config.get("MySQL", "user");
-        this.password = Config.get("MySQL", "password");
-        this.prefix = Config.get("MySQL", "prefix");
+        this.host = Config.get(SECTION_NAME, "host");
+        this.port = Config.getInt(SECTION_NAME, "port");
+        this.database = Config.get(SECTION_NAME, "database");
+        this.user = Config.get(SECTION_NAME, "user");
+        this.password = Config.get(SECTION_NAME, "password");
+        this.prefix = Config.get(SECTION_NAME, "prefix");
 
-        this.maxPoolSize = Config.getInt("MySQL", "max_pool_size");
-        this.prepStmtCacheSize = Config.getInt("MySQL", "prepStmtCacheSize");
-        this.prepStmtCacheSqlLimit = Config.getInt("MySQL", "prepStmtCacheSqlLimit");
+        this.maxPoolSize = Config.getInt(SECTION_NAME, "max_pool_size");
+        this.prepStmtCacheSize = Config.getInt(SECTION_NAME, "prepStmtCacheSize");
+        this.prepStmtCacheSqlLimit = Config.getInt(SECTION_NAME, "prepStmtCacheSqlLimit");
     }
 
     public String getHost () {
