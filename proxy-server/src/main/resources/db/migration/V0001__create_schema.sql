@@ -2,7 +2,7 @@
 -- Tabellenstruktur für Tabelle `${prefix}users`
 --
 
-CREATE TABLE IF NOT EXISTS `${prefix}users` (
+CREATE TABLE IF NOT EXISTS `${prefix}proxy_users` (
   `userID` int(10) NOT NULL,
   `username` varchar(255) NOT NULL,
   `ip` varchar(255) NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `${prefix}users` (
 --
 -- Indizes für die Tabelle `${prefix}users`
 --
-ALTER TABLE `${prefix}users`
+ALTER TABLE `${prefix}proxy_users`
  ADD PRIMARY KEY (`userID`), ADD UNIQUE KEY `username` (`username`), ADD KEY `online` (`online`,`last_online`);
 
 --
@@ -28,5 +28,5 @@ ALTER TABLE `${prefix}users`
 --
 -- AUTO_INCREMENT für Tabelle `${prefix}users`
 --
-ALTER TABLE `${prefix}users`
+ALTER TABLE `${prefix}proxy_users`
 MODIFY `userID` int(10) NOT NULL AUTO_INCREMENT;

@@ -27,8 +27,8 @@ public class LDAPLogin {
     protected String userPrefix = "";
     protected String userSuffix = "";
 
-    protected static final String INSERT_QUERY = String.format("INSERT INTO `mmo_users` (   `userID`, `username`, `ip`, `online`, `last_online`, `activated`) VALUES (   NULL, ?, ?, '1', CURRENT_TIMESTAMP, '1') ON DUPLICATE KEY UPDATE `ip` = ?, `online` = '1', `last_online` = NOW();");
-    protected static final String SELECT_QUERY = String.format("SELECT * FROM `mmo_users` WHERE `username` = ?; ");
+    protected static final String INSERT_QUERY = String.format("INSERT INTO `mmo_proxy_users` (   `userID`, `username`, `ip`, `online`, `last_online`, `activated`) VALUES (   NULL, ?, ?, '1', CURRENT_TIMESTAMP, '1') ON DUPLICATE KEY UPDATE `ip` = ?, `online` = '1', `last_online` = NOW();");
+    protected static final String SELECT_QUERY = String.format("SELECT * FROM `mmo_proxy_users` WHERE `username` = ?; ");
 
     public static final String LOG_TAG = "LDAPLogin";
 
