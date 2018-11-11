@@ -128,7 +128,6 @@ public class ServerMain {
         HzLogger hzLogger = new HzLogger(hazelcastInstance);
         LogWriter.attachListener(hzLogger);
 
-        //Utils.printSection(DATABASE_TAG);
         Log.i(DATABASE_TAG, "initialize MySQL config...");
 
         //load mysql config
@@ -140,7 +139,7 @@ public class ServerMain {
         //create or upgrade database schema
         DatabaseUpgrader databaseUpgrader = new DatabaseUpgrader(mySQLConfig);
         databaseUpgrader.migrate();
-        System.out.println(databaseUpgrader.getInfo());
+        databaseUpgrader.printInfo(DATABASE_TAG);
 
         Log.i(DATABASE_TAG, "initialize database connection...");
 

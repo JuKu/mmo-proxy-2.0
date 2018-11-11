@@ -53,15 +53,15 @@ public class DatabaseUpgraderTest {
     }
 
     @Test
-    public void testGetInfo () throws IOException {
+    public void testPrintInfo () throws IOException {
         MySQLConfig mySQLConfig = createConfig();
         DatabaseUpgrader databaseUpgrader = new DatabaseUpgrader(mySQLConfig);
 
-        assertNotNull(databaseUpgrader.getInfo());
+        databaseUpgrader.printInfo("Database");
     }
 
     @Test
-    public void testGetInfo1 () throws IOException {
+    public void testPrintInfo1 () throws IOException {
         MySQLConfig mySQLConfig = createConfig();
         DatabaseUpgrader databaseUpgrader = new DatabaseUpgrader(mySQLConfig);
 
@@ -145,7 +145,7 @@ public class DatabaseUpgraderTest {
             }
         });
 
-        assertNotNull(databaseUpgrader.getInfo());
+        databaseUpgrader.printInfo("Database");
     }
 
     @Test

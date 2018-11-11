@@ -1,5 +1,6 @@
 package com.jukusoft.mmo.proxy.frontend.database;
 
+import com.jukusoft.mmo.engine.shared.logger.Log;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
 import org.flywaydb.core.api.MigrationInfoService;
@@ -50,16 +51,12 @@ public class DatabaseUpgrader {
         this.flyway.validate();
     }
 
-    public String getInfo () {
+    public void printInfo (String tag) {
         MigrationInfoService infoService = this.flyway.info();
 
-        String s = "";
-
         for (MigrationInfo info : infoService.all()) {
-            s += " - " + info.getDescription() + ", script: " + info.getScript() + ", state: " + info.getState() + ", version: " + info.getVersion() + "\n";
+            Log.i(tag, " - " + info.getDescription() + ", script: " + info.getScript() + ", state: " + info.getState() + ", version: " + info.getVersion());
         }
-
-        return s;
     }
 
 }
