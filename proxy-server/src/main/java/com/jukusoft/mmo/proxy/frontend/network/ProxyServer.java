@@ -78,7 +78,7 @@ public class ProxyServer {
 
         //TODO: check ip blacklist / firewall
 
-        final Connection connection = new Connection(bufferStream);
+        final Connection connection = new Connection(socket, bufferStream);
         final ConnState state = new ConnState();
         final GSConnectionManager gsConnectionManager = new GSConnectionManager(bufferStream);
 

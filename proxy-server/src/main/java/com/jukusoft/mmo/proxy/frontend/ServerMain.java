@@ -183,7 +183,7 @@ public class ServerMain {
         //register handlers
         proxyServer.addMessageListener(new PublicKeyRequestHandler(keyPair.getPublic()));
         proxyServer.addMessageListener(new RTTRequestHandler());
-        proxyServer.addMessageListener(new LoginRequestHandler());
+        proxyServer.addMessageListener(new LoginRequestHandler(keyPair.getPrivate()));
 
         proxyServer.start(host, port, res -> {
             started.set(true);
