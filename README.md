@@ -57,7 +57,8 @@ Also it is more independent from game server, they don't share the same database
 | **0x01**  | 0x01  | (2) client <--> proxy (1)  | request / send RSA public key to client, so he can encrypt login data  | -  | x  |
 | 0x01  | 0x02  | (1) client <--> proxy (2)  | RTT - round trip time (message to determine client ping) | -  | x  |
 | 0x01  | 0x03  | client <--> proxy  | login request / response (with login data and client version)  | -  | x  |
-| 0x01  | 0x04  | client <--> proxy  | request / send character list  | x  | -  |
+| 0x01  | 0x04  | client <--> proxy  | request / send character list  | x  | x  |
+| 0x01  | 0x05  | client <--> proxy  | character creation  | x  | -  |
   
 ## Flowchart
 
