@@ -41,6 +41,8 @@ public class LDAPLogin {
     }
 
     public int login(String username, String password, String ip) {
+        long startTime = System.currentTimeMillis();
+
         // setup the environment
         Hashtable<String, String> env = new Hashtable<>();
         env.put(Context.INITIAL_CONTEXT_FACTORY,"com.sun.jndi.ldap.LdapCtxFactory");
@@ -100,6 +102,10 @@ public class LDAPLogin {
                             Log.w(LOG_TAG, "user '" + username + "' exists but is not activated.");
                             return 0;
                         }
+
+                        long endTime = System.currentTimeMillis();
+                        long diffTime = endTime - startTime;
+                        Log.v(LOG_TAG, "login takes " + diffTime + "ms");
 
                         return userID;
                     }
