@@ -62,7 +62,7 @@ Also it is more independent from game server, they don't share the same database
 
 ### Login Proxy --> Region Server
 
-Open conenction to region server, send JOIN character message with following data:
+Open conenction to region server, send JOIN character message with following data (as json encrypted with RSA):
 
   - userID
   - username
