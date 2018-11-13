@@ -59,6 +59,16 @@ Also it is more independent from game server, they don't share the same database
 | 0x01  | 0x03  | client <--> proxy  | login request / response (with login data and client version)  | -  | x  |
 | 0x01  | 0x04  | client <--> proxy  | request / send character list  | x  | x  |
 | 0x01  | 0x05  | client <--> proxy  | character creation  | x  | -  |
+
+### Login Proxy --> Region Server
+
+Open conenction to region server, send JOIN character message with following data:
+
+  - userID
+  - username
+  - cluster_user (for region auth)
+  - cluster password (for region auth)
+  - all permission roles / groups of user (from ldap, e.q. gamemaster)
   
 ## Flowchart
 
