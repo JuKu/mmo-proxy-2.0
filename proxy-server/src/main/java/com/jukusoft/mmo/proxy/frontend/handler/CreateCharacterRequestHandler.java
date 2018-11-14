@@ -14,7 +14,6 @@ import com.jukusoft.mmo.proxy.frontend.network.MessageListener;
 import com.jukusoft.vertx.serializer.Serializer;
 import com.jukusoft.vertx.serializer.annotations.MessageType;
 import com.jukusoft.vertx.serializer.annotations.ProtocolVersion;
-import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
 
