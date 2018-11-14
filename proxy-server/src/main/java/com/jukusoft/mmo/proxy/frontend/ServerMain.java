@@ -15,10 +15,7 @@ import com.jukusoft.mmo.engine.shared.version.Version;
 import com.jukusoft.mmo.proxy.frontend.database.Database;
 import com.jukusoft.mmo.proxy.frontend.database.DatabaseUpgrader;
 import com.jukusoft.mmo.proxy.frontend.database.MySQLConfig;
-import com.jukusoft.mmo.proxy.frontend.handler.CharacterListRequestHandler;
-import com.jukusoft.mmo.proxy.frontend.handler.LoginRequestHandler;
-import com.jukusoft.mmo.proxy.frontend.handler.PublicKeyRequestHandler;
-import com.jukusoft.mmo.proxy.frontend.handler.RTTRequestHandler;
+import com.jukusoft.mmo.proxy.frontend.handler.*;
 import com.jukusoft.mmo.proxy.frontend.log.HzLogger;
 import com.jukusoft.mmo.proxy.frontend.network.ProxyServer;
 import com.jukusoft.mmo.proxy.frontend.utils.EncryptionUtils;
@@ -186,6 +183,7 @@ public class ServerMain {
         proxyServer.addMessageListener(new RTTRequestHandler());
         proxyServer.addMessageListener(new LoginRequestHandler(keyPair.getPrivate()));
         proxyServer.addMessageListener(new CharacterListRequestHandler());
+        proxyServer.addMessageListener(new CreateCharacterRequestHandler());
 
         proxyServer.start(host, port, res -> {
             started.set(true);
