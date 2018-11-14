@@ -58,7 +58,8 @@ Also it is more independent from game server, they don't share the same database
 | 0x01  | 0x02  | (1) client <--> proxy (2)  | RTT - round trip time (message to determine client ping) | -  | x  |
 | 0x01  | 0x03  | client <--> proxy  | login request / response (with login data and client version)  | -  | x  |
 | 0x01  | 0x04  | client <--> proxy  | request / send character list  | x  | x  |
-| 0x01  | 0x05  | client <--> proxy  | character creation  | x  | -  |
+| 0x01  | 0x05  | client <--> proxy  | character creation  | x  | x  |
+| 0x01  | 0x06  | client --> proxy  | enter game world  | x  | -  |
 
 ### Login Proxy --> Region Server
 
