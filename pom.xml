@@ -78,7 +78,7 @@
 
 		<vertx.serializer.version>1.0.3</vertx.serializer.version>
 
-		<shared.library.version>0.0.11-SNAPSHOT</shared.library.version>
+		<shared.library.version>0.0.12-SNAPSHOT</shared.library.version>
 
 		<!-- hazelcast version -->
 		<hazelcast.version>3.11</hazelcast.version>
