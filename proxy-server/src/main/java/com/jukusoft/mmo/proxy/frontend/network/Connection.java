@@ -36,7 +36,7 @@ public class Connection {
     * close connection
     */
     public void close () {
-        //
+        this.socket.close();
     }
 
 }
