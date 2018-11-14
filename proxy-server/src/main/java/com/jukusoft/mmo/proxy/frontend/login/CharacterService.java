@@ -49,9 +49,10 @@ public class CharacterService implements ICharacterService {
                     while (rs.next()) {
                         int cid = rs.getInt("cid");
                         String name = rs.getString("name");
-                        String type = rs.getString("type");
                         String data = rs.getString("data");//json data
                         int current_regionID = rs.getInt("current_regionID");
+                        int instanceID = rs.getInt("instanceID");
+                        int shardID = rs.getInt("shardID");
 
                         //create character slot from json
                         CharacterSlot slot = CharacterSlot.createFromJson(cid, name, new JsonObject(data));
