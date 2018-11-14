@@ -176,6 +176,7 @@ public class ServerMain {
         TypeLookup.register(LoginResponse.class);
         TypeLookup.register(CreateCharacterRequest.class);
         TypeLookup.register(CreateCharacterResponse.class);
+        TypeLookup.register(EnterGameWorldRequest.class);
 
         //register handlers
         proxyServer.addMessageListener(new PublicKeyRequestHandler(keyPair.getPublic()));
@@ -183,6 +184,7 @@ public class ServerMain {
         proxyServer.addMessageListener(new LoginRequestHandler(keyPair.getPrivate()));
         proxyServer.addMessageListener(new CharacterListRequestHandler());
         proxyServer.addMessageListener(new CreateCharacterRequestHandler());
+        proxyServer.addMessageListener(new EnterGameWorldRequestHandler());
 
         proxyServer.start(host, port, res -> {
             started.set(true);

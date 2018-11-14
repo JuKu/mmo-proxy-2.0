@@ -33,7 +33,6 @@ public class CreateCharacterRequestHandler implements MessageListener {
     public void onMessage(Buffer buffer, ConnState state, Connection clientConn, GSConnectionManager gsConn) throws Exception {
         Log.i(LOG_TAG, "received create character request.");
 
-        //first check, if user is logged in
         //ignore this request, if user isn't logged in
         if (!state.isLoggedIn()) {
             Log.d(LOG_TAG, "Cannot create character, because user isnt logged in.");
