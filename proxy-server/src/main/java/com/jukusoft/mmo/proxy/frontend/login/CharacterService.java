@@ -2,6 +2,7 @@ package com.jukusoft.mmo.proxy.frontend.login;
 
 import com.jukusoft.mmo.engine.shared.data.CharacterSlot;
 import com.jukusoft.mmo.engine.shared.logger.Log;
+import com.jukusoft.mmo.engine.shared.messages.CreateCharacterResponse;
 import com.jukusoft.mmo.proxy.frontend.database.Database;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
@@ -27,37 +28,6 @@ public class CharacterService implements ICharacterService {
     protected static final String SELECT_CURRENT_REGION = "SELECT * FROM `{prefix}proxy_characters` LEFT JOIN `{prefix}regions` ON `{prefix}characters`.`current_regionID` = `{prefix}regions`.`regionID` WHERE `cid` = ?; ";
 
     public static final String LOG_TAG = "CharacterService";
-
-    public enum CREATE_CHARACTER_RESULT_CODES {
-
-        /**
-        * character was successfully created
-        */
-        SUCCESS(1),
-
-        /**
-        * character name already exists in database
-        */
-        NAME_ALREADY_EXISTS(2),
-
-        /**
-        * character name is invalide
-        */
-        INVALIDE_NAME(3),
-
-        INTERNAL_SERVER_ERROR(4);
-
-        private final int resultCode;
-
-        CREATE_CHARACTER_RESULT_CODES (int resultCode) {
-            this.resultCode = resultCode;
-        }
-
-        public int getValue() {
-            return this.resultCode;
-        }
-
-    }
 
     protected Pattern usernameValidatorPattern = Pattern.compile("[A-Za-z0-9_]+");
 
@@ -100,14 +70,14 @@ public class CharacterService implements ICharacterService {
     }
 
     @Override
-    public void createCharacter(CharacterSlot character, int userID, Handler<Integer> handler) {
+    public void createCharacter(CharacterSlot character, int userID, Handler<CreateCharacterResponse.CREATE_CHARACTER_RESULT> handler) {
         //first, check if character name already exists
         String name = character.getName();
 
         //check, if name is valide
         if (!this.usernameValidatorPattern.matcher(name).matches()) {
             //character name is not valide
-            handler.handle(CREATE_CHARACTER_RESULT_CODES.INVALIDE_NAME.getValue());
+            handler.handle(CreateCharacterResponse.CREATE_CHARACTER_RESULT.INVALIDE_NAME);
 
             return;
         }
@@ -115,7 +85,7 @@ public class CharacterService implements ICharacterService {
         //check, if character name already exists
         if (this.existsCharacterName(name)) {
             //character name already exists
-            handler.handle(CREATE_CHARACTER_RESULT_CODES.NAME_ALREADY_EXISTS.getValue());
+            handler.handle(CreateCharacterResponse.CREATE_CHARACTER_RESULT.DUPLICATE_NAME);
 
             return;
         }
@@ -125,12 +95,12 @@ public class CharacterService implements ICharacterService {
             this.create(character, userID);
         } catch (SQLException e) {
             Log.w(LOG_TAG, "SQLException while trying to create character.", e);
-            handler.handle(CREATE_CHARACTER_RESULT_CODES.INTERNAL_SERVER_ERROR.getValue());
+            handler.handle(CreateCharacterResponse.CREATE_CHARACTER_RESULT.SERVER_ERROR);
 
             return;
         }
 
-        handler.handle(CREATE_CHARACTER_RESULT_CODES.SUCCESS.getValue());
+        handler.handle(CreateCharacterResponse.CREATE_CHARACTER_RESULT.SUCCESS);
     }
 
     @Override
