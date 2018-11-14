@@ -20,9 +20,9 @@ public class CharacterService implements ICharacterService {
     protected static final String SELECT_MY_CHARACTERS = "SELECT * FROM `{prefix}proxy_characters` WHERE `userID` = ?; ";
     protected static final String SELECT_CHARACTER_NAMES = "SELECT * FROM `{prefix}proxy_characters` WHERE `name` = ?; ";
     protected static final String INSERT_CHARACTER = "INSERT INTO `{prefix}proxy_characters` (" +
-            "   `cid`, `name`, `type`, `userID`, `data`, `current_regionID`, `instanceID`, `first_game`, `pos_x`, `pos_y`, `pos_z`, `auto_join`, `visible`, `activated`" +
+            "   `cid`, `userID`, `name`, `data`, `current_regionID`, `instanceID`, `shardID`, `activated`" +
             ") VALUES (" +
-            "   NULL, ?, 'PLAYER', ?, ?, ?, ?, '1', '-1', '-1', '-1', '0', '1', '1'" +
+            "   NULL, ?, ?, ?, ?, ?, ?, '1'" +
             "); ";
     protected static final String CHECK_CID_BELONGS_TO_USER = "SELECT * FROM `{prefix}proxy_characters` WHERE `userID` = ? AND `cid` = ?; ";
     protected static final String SELECT_CURRENT_REGION = "SELECT * FROM `{prefix}proxy_characters` LEFT JOIN `{prefix}regions` ON `{prefix}characters`.`current_regionID` = `{prefix}regions`.`regionID` WHERE `cid` = ?; ";
@@ -174,15 +174,16 @@ public class CharacterService implements ICharacterService {
         //create character in database
         try (Connection conn = Database.getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement(Database.replacePrefix(INSERT_CHARACTER))) {
-                stmt.setString(1, character.getName());
-                stmt.setInt(2, userID);
+                stmt.setInt(1, userID);
+                stmt.setString(2, character.getName());
                 stmt.setString(3, character.toJson().encode());
 
                 //TODO: load start regionID & instanceID from global settings
 
-                //region & instance id, -1 so it will be set from proxy server automatically
+                //region & instance id (and shardID), -1 so it will be set from proxy server automatically
                 stmt.setInt(4, 1);
                 stmt.setInt(5, 1);
+                stmt.setInt(6, 1);
 
                 stmt.executeUpdate();
             }
