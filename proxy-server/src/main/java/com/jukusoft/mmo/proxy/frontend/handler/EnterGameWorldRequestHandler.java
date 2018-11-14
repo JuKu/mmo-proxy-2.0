@@ -23,7 +23,7 @@ public class EnterGameWorldRequestHandler implements MessageListener {
 
         //ignore this request, if user isn't logged in
         if (!state.isLoggedIn()) {
-            Log.d(LOG_TAG, "Player cannot enter game world, because user isnt logged in.");
+            Log.w(LOG_TAG, "Player cannot enter game world, because user isnt logged in.");
             return;
         }
 
@@ -31,6 +31,10 @@ public class EnterGameWorldRequestHandler implements MessageListener {
         int cid = request.cid;
 
         Log.i(LOG_TAG, "try to enter game world with cid " + cid + " from userID " + state.getUserID() + "...");
+
+        //TODO: check, if character belongs to player OR user has gamemaster permission
+
+        //TODO: get User permissions from DB
 
         //TODO: add code here
     }
