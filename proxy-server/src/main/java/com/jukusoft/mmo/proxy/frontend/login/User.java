@@ -1,6 +1,5 @@
 package com.jukusoft.mmo.proxy.frontend.login;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

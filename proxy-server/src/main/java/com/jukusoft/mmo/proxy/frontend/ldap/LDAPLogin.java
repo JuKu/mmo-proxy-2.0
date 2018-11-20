@@ -134,10 +134,6 @@ public class LDAPLogin {
         String[] attrIDs = {"cn"};
         SearchControls ctls = new SearchControls();
         ctls.setReturningAttributes(attrIDs);
-        String[] attributes = {"memberOf", "member"};
-        //ctls.setReturningAttributes(attributes);
-        //ctls.setReturningAttributes(new String[]{"*", "+"});
-
         ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
         try {
