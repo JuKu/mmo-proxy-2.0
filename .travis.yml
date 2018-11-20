@@ -38,7 +38,14 @@ script:
 
 notifications:
   email: false
-  webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
+  webhooks:
+    urls:
+      - https://fathomless-fjord-24024.herokuapp.com/notify
+    on_success: always # default: always
+    on_failure: always # default: always
+    on_start: never   # default: never
+    on_cancel: always # default: always
+    on_error: always # default: always
 
 #notifications:
 #  email: false
