@@ -3,6 +3,7 @@ package com.jukusoft.mmo.proxy.frontend.ldap;
 import com.jukusoft.mmo.engine.shared.config.Config;
 import com.jukusoft.mmo.engine.shared.logger.Log;
 import com.jukusoft.mmo.proxy.frontend.database.Database;
+import com.jukusoft.mmo.proxy.frontend.login.User;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -42,7 +43,7 @@ public class LDAPLogin {
         this.userSuffix = Config.get("LDAP", "user_suffix");
     }
 
-    public int login(String username, String password, String ip) {
+    public User login(String username, String password, String ip) {
         long startTime = System.currentTimeMillis();
 
         // setup the environment
@@ -73,13 +74,13 @@ public class LDAPLogin {
             loggedIn = true;
         } catch (NamingException e) {
             loggedIn = false;
-            return 0;
+            return null;
         }
 
         Log.i(LOG_TAG, "authorization successful for user '" + userDn + "'!");
 
-        //list groups of user
-        listGroups(context, Config.get("LDAP", "users_container"), username);
+        //get groups of user for permissions
+        List<String> groups = listGroups(context, Config.get("LDAP", "users_container"), username);
 
         try (Connection conn = Database.getConnection()) {
             Log.v(LOG_TAG, "execute sql query: " + INSERT_QUERY);
@@ -105,23 +106,24 @@ public class LDAPLogin {
                         //check, if user is activated
                         if (activated != 1) {
                             Log.w(LOG_TAG, "user '" + username + "' exists but is not activated.");
-                            return 0;
+                            return null;
                         }
 
                         long endTime = System.currentTimeMillis();
                         long diffTime = endTime - startTime;
                         Log.v(LOG_TAG, "login takes " + diffTime + "ms");
 
-                        return userID;
+                        //create and return new user object
+                        return new User(userID, username, groups);
                     }
                 }
             }
         } catch (SQLException e) {
             Log.w(LOG_TAG, "SQLException while login: ", e);
-            return 0;
+            return null;
         }
 
-        return 0;
+        return null;
     }
 
     protected List<String> listGroups (DirContext ctx, String usersContainer, String username) {
@@ -135,10 +137,6 @@ public class LDAPLogin {
         String[] attributes = {"memberOf", "member"};
         //ctls.setReturningAttributes(attributes);
         //ctls.setReturningAttributes(new String[]{"*", "+"});
-
-        //(&(uid=" + username + ")(memberOf=*))
-
-        //(|(memberUid=juku)(&(uid=juku)(memberOf=*)))
 
         ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 

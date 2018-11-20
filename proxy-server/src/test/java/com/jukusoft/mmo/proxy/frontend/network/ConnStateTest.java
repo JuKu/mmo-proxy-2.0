@@ -1,7 +1,10 @@
 package com.jukusoft.mmo.proxy.frontend.network;
 
 import com.jukusoft.mmo.engine.shared.config.Config;
+import com.jukusoft.mmo.proxy.frontend.login.User;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,7 +23,7 @@ public class ConnStateTest {
     @Test
     public void testSetLoggedIn () {
         ConnState state = new ConnState();
-        state.setLoggedIn(2, "test");
+        state.setLoggedIn(new User(1, "test", new ArrayList<>()));
 
         assertEquals(true, state.isLoggedIn());
         assertEquals(2, state.getUserID());

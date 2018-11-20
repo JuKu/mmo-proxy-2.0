@@ -1,12 +1,13 @@
 package com.jukusoft.mmo.proxy.frontend.network;
 
 import com.jukusoft.mmo.engine.shared.config.Config;
+import com.jukusoft.mmo.proxy.frontend.login.User;
 
 public class ConnState {
 
     protected boolean isLoggedIn = false;
-    protected int userID = -1;
-    protected String username = "";
+    protected User user = null;
+    protected int cid = 0;
 
     //how often has user tried to login?
     protected int loginRetries = 0;
@@ -19,18 +20,21 @@ public class ConnState {
         return this.isLoggedIn;
     }
 
-    public void setLoggedIn (int userID, String username) {
+    public void setLoggedIn (User user) {
         this.isLoggedIn = true;
-        this.userID = userID;
-        this.username = username;
+        this.user = user;
     }
 
     public int getUserID() {
-        return this.userID;
+        return this.user.getUserID();
     }
 
     public String getUsername() {
-        return this.username;
+        return this.user.getUsername();
+    }
+
+    public User getUser () {
+        return this.user;
     }
 
     public boolean retryLogin () {
@@ -42,6 +46,20 @@ public class ConnState {
         //user is allowed to login again
         this.loginRetries++;
         return true;
+    }
+
+    public boolean isGameMaster () {
+        //TODO: add code here
+
+        return false;
+    }
+
+    public int getCID() {
+        return this.cid;
+    }
+
+    public void setCID(int cid) {
+        this.cid = cid;
     }
 
     public void cleanUp () {

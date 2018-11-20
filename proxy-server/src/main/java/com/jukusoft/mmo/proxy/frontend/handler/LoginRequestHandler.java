@@ -6,6 +6,7 @@ import com.jukusoft.mmo.engine.shared.messages.LoginRequest;
 import com.jukusoft.mmo.engine.shared.messages.LoginResponse;
 import com.jukusoft.mmo.engine.shared.utils.EncryptionUtils;
 import com.jukusoft.mmo.proxy.frontend.ldap.LDAPLogin;
+import com.jukusoft.mmo.proxy.frontend.login.User;
 import com.jukusoft.mmo.proxy.frontend.network.ConnState;
 import com.jukusoft.mmo.proxy.frontend.network.Connection;
 import com.jukusoft.mmo.proxy.frontend.network.GSConnectionManager;
@@ -71,14 +72,16 @@ public class LoginRequestHandler implements MessageListener {
         }
 
         //try to login
-        int userID = this.ldapLogin.login(username, password, clientConn.host());
+        User user = this.ldapLogin.login(username, password, clientConn.host());
 
-        if (userID > 0) {
+        if (user != null) {
+            int userID = user.getUserID();
+
             //login successfully
-            Log.i(LOG_TAG, "login successful for user '" + username + "'.");
+            Log.i(LOG_TAG, "login successful for user '" + username + "' (userID: " + userID + ").");
 
             //update state
-            state.setLoggedIn(userID, username);
+            state.setLoggedIn(user);
 
             response.userID = userID;
             response.username = "n/a";
