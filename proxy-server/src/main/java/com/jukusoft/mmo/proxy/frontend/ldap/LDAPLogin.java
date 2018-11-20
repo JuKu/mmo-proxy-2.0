@@ -146,26 +146,7 @@ public class LDAPLogin {
             int k = 0;
 
             while (answer.hasMore()) {
-                Log.v(LOG_TAG, "user object found in ldap search for user '" + username + "'.");
-
                 SearchResult sr = answer.next();
-                Log.v(LOG_TAG, "group membership found: " + sr.toString() + " with " + sr.getAttributes().size() + " attributes.");
-
-                /*NamingEnumeration<String> namingEnumeration = sr.getAttributes().getIDs();
-
-                while (namingEnumeration.hasMore()) {
-                    String attrKey = namingEnumeration.next();
-                    Attribute attribute = sr.getAttributes().get(attrKey);
-
-                    System.err.println("attribute found: " + attribute.get());
-                }
-
-                NamingEnumeration<? extends Attribute> enumeration = sr.getAttributes().getAll();*/
-
-                /*while (enumeration.hasMore()) {
-                    Attribute attr = enumeration.next();
-                    System.err.println("attr: " + attr.toString());
-                }*/
 
                 Attribute groupCn = sr.getAttributes().get("cn");
                 String cn = (String) groupCn.get();

@@ -31,4 +31,8 @@ public class User {
         return Collections.unmodifiableList(this.groups);
     }
 
+    public boolean hasGroup (String groupName) {
+        return this.groups.contains(groupName);
+    }
+
 }

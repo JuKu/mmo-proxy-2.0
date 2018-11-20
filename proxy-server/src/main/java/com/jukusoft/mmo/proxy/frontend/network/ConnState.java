@@ -57,9 +57,7 @@ public class ConnState {
     }
 
     public boolean isGameMaster () {
-        //TODO: add code here
-
-        return false;
+        return this.user.hasGroup(Config.get("Security", "gamemasterGroup"));
     }
 
     public int getCID() {
