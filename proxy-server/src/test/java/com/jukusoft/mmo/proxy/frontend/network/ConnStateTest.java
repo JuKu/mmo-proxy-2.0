@@ -23,7 +23,7 @@ public class ConnStateTest {
     @Test
     public void testSetLoggedIn () {
         ConnState state = new ConnState();
-        state.setLoggedIn(new User(1, "test", new ArrayList<>()));
+        state.setLoggedIn(new User(2, "test", new ArrayList<>()));
 
         assertEquals(true, state.isLoggedIn());
         assertEquals(2, state.getUserID());

@@ -26,10 +26,18 @@ public class ConnState {
     }
 
     public int getUserID() {
+        if (this.user == null) {
+            return -1;
+        }
+
         return this.user.getUserID();
     }
 
     public String getUsername() {
+        if (this.user == null) {
+            return "";
+        }
+
         return this.user.getUsername();
     }
 
