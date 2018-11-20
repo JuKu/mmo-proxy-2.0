@@ -5,14 +5,16 @@ import com.jukusoft.mmo.engine.shared.logger.Log;
 import com.jukusoft.mmo.proxy.frontend.database.Database;
 
 import javax.naming.Context;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 public class LDAPLogin {
 
@@ -76,6 +78,9 @@ public class LDAPLogin {
 
         Log.i(LOG_TAG, "authorization successful for user '" + userDn + "'!");
 
+        //list groups of user
+        listGroups(context, Config.get("LDAP", "users_container"), username);
+
         try (Connection conn = Database.getConnection()) {
             Log.v(LOG_TAG, "execute sql query: " + INSERT_QUERY);
 
@@ -117,6 +122,75 @@ public class LDAPLogin {
         }
 
         return 0;
+    }
+
+    protected List<String> listGroups (DirContext ctx, String usersContainer, String username) {
+        //https://stackoverflow.com/questions/34491680/get-groups-using-ldap-in-java
+
+        List<String> groups = new ArrayList<>();
+
+        String[] attrIDs = {"cn"};
+        SearchControls ctls = new SearchControls();
+        ctls.setReturningAttributes(attrIDs);
+        String[] attributes = {"memberOf", "member"};
+        //ctls.setReturningAttributes(attributes);
+        //ctls.setReturningAttributes(new String[]{"*", "+"});
+
+        //(&(uid=" + username + ")(memberOf=*))
+
+        //(|(memberUid=juku)(&(uid=juku)(memberOf=*)))
+
+        ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+        try {
+            NamingEnumeration<SearchResult> answer = ctx.search(usersContainer, "(|(memberUid=" + username.toLowerCase() + ")(&(uid=" + username.toLowerCase() + ")(memberOf=*)))", ctls);//(sAMAccountName=userName), (&(|(objectclass=user)(objectclass=inetOrgPerson))(uid=" + username + "))
+
+            int k = 0;
+
+            while (answer.hasMore()) {
+                Log.v(LOG_TAG, "user object found in ldap search for user '" + username + "'.");
+
+                SearchResult sr = answer.next();
+                Log.v(LOG_TAG, "group membership found: " + sr.toString() + " with " + sr.getAttributes().size() + " attributes.");
+
+                /*NamingEnumeration<String> namingEnumeration = sr.getAttributes().getIDs();
+
+                while (namingEnumeration.hasMore()) {
+                    String attrKey = namingEnumeration.next();
+                    Attribute attribute = sr.getAttributes().get(attrKey);
+
+                    System.err.println("attribute found: " + attribute.get());
+                }
+
+                NamingEnumeration<? extends Attribute> enumeration = sr.getAttributes().getAll();*/
+
+                /*while (enumeration.hasMore()) {
+                    Attribute attr = enumeration.next();
+                    System.err.println("attr: " + attr.toString());
+                }*/
+
+                Attribute groupCn = sr.getAttributes().get("cn");
+                String cn = (String) groupCn.get();
+
+                Log.v(LOG_TAG, "[user: " + username + "] ldap group membership found: " + cn);
+
+                groups.add(cn);
+
+                k++;
+            }
+
+            if (k == 0) {
+                Log.w(LOG_TAG, "LDAP: no user object found in ldap search for user '" + username + "'!");
+            }
+        } catch (NamingException e) {
+            Log.w(LOG_TAG, "NamingException while getting groups from ldap: ", e);
+        }
+
+        if (groups.isEmpty()) {
+            Log.w(LOG_TAG, "no groups found for user '" + username + "'!");
+        }
+
+        return groups;
     }
 
 }
