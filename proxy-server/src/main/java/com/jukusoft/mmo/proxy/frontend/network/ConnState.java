@@ -7,7 +7,7 @@ public class ConnState {
 
     protected boolean isLoggedIn = false;
     protected User user = null;
-    protected int cid = 0;
+    protected int cid = -1;
 
     //how often has user tried to login?
     protected int loginRetries = 0;
