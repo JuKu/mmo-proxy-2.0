@@ -5,7 +5,6 @@ import com.jukusoft.mmo.engine.shared.logger.Log;
 import com.jukusoft.mmo.engine.shared.memory.Pools;
 import com.jukusoft.mmo.engine.shared.messages.EnterGameWorldRequest;
 import com.jukusoft.mmo.engine.shared.messages.EnterGameWorldResponse;
-import com.jukusoft.mmo.proxy.frontend.database.RegionMeta;
 import com.jukusoft.mmo.proxy.frontend.login.CharacterService;
 import com.jukusoft.mmo.proxy.frontend.login.ICharacterService;
 import com.jukusoft.mmo.proxy.frontend.network.ConnState;
@@ -15,7 +14,6 @@ import com.jukusoft.mmo.proxy.frontend.network.MessageListener;
 import com.jukusoft.vertx.serializer.Serializer;
 import com.jukusoft.vertx.serializer.annotations.MessageType;
 import com.jukusoft.vertx.serializer.annotations.ProtocolVersion;
-import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 
 @MessageType(type = 0x01, extendedType = 0x06)
