@@ -148,7 +148,6 @@ public class CharacterService implements ICharacterService {
             }
         } catch (SQLException e) {
             Log.w(LOG_TAG, "SQLException while get current region of character: ", e);
-            e.printStackTrace();
             handler.handle(null);
         }
     }

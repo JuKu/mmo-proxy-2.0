@@ -1,5 +1,6 @@
 package com.jukusoft.mmo.proxy.frontend.network;
 
+import com.jukusoft.mmo.engine.shared.logger.Log;
 import com.jukusoft.vertx.connection.stream.BufferStream;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
@@ -8,6 +9,8 @@ import io.vertx.core.buffer.Buffer;
 * manages gameserver connections for a single player (one player - 1..* game server connections)
 */
 public class GSConnectionManager {
+
+    protected static final String LOG_TAG = "GSConn";
 
     protected final BufferStream streamToClient;
 
@@ -21,11 +24,15 @@ public class GSConnectionManager {
     }
 
     public void requestJoin (long regionID, int instanceID, Handler<Boolean> handler) {
+        Log.d(LOG_TAG, "try to join region " + regionID + " on instanceID: " + instanceID + "...");
+
         //TODO: find free shard
 
         //TODO: connect to region server
 
-        //TODO: send cluster login data to region server
+        //TODO: send cluster login data to region server to authentificate connection
+
+        //TODO: send gs join message to region server with user, character & permissions data
     }
 
     /**
