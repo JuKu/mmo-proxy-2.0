@@ -1,6 +1,7 @@
 package com.jukusoft.mmo.proxy.frontend.network;
 
 import com.jukusoft.vertx.connection.stream.BufferStream;
+import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 
 /**
@@ -19,10 +20,14 @@ public class GSConnectionManager {
         this.streamToClient = streamToClient;
     }
 
+    public void requestJoin (long regionID, int instanceID, Handler<Boolean> handler) {
+        //TODO: find free shard
+    }
+
     /**
     * open game server connection to a specific region
     */
-    public void open (long regionID, int instanceID, int shardID) {
+    protected void open (long regionID, int instanceID, int shardID) {
         //
     }
 

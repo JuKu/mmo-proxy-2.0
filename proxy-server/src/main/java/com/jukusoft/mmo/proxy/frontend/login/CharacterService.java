@@ -4,6 +4,7 @@ import com.jukusoft.mmo.engine.shared.data.CharacterSlot;
 import com.jukusoft.mmo.engine.shared.logger.Log;
 import com.jukusoft.mmo.engine.shared.messages.CreateCharacterResponse;
 import com.jukusoft.mmo.proxy.frontend.database.Database;
+import com.jukusoft.mmo.proxy.frontend.database.RegionMeta;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 
@@ -25,7 +26,8 @@ public class CharacterService implements ICharacterService {
             "   NULL, ?, ?, ?, ?, ?, ?, '1'" +
             "); ";
     protected static final String CHECK_CID_BELONGS_TO_USER = "SELECT * FROM `{prefix}proxy_characters` WHERE `userID` = ? AND `cid` = ?; ";
-    protected static final String SELECT_CURRENT_REGION = "SELECT * FROM `{prefix}proxy_characters` LEFT JOIN `{prefix}regions` ON `{prefix}characters`.`current_regionID` = `{prefix}regions`.`regionID` WHERE `cid` = ?; ";
+    //protected static final String SELECT_CURRENT_REGION = "SELECT * FROM `{prefix}proxy_characters` LEFT JOIN `{prefix}regions` ON `{prefix}characters`.`current_regionID` = `{prefix}regions`.`regionID` WHERE `cid` = ?; ";
+    protected static final String SELECT_CURRENT_REGION = "SELECT * FROM `{prefix}proxy_characters` WHERE `cid` = ?; ";
 
     public static final String LOG_TAG = "CharacterService";
 
@@ -123,8 +125,10 @@ public class CharacterService implements ICharacterService {
         }
     }
 
-    /*@Override
-    public void getCurrentRegionOfCharacter(int cid, Handler<RegionMetaData> handler) {
+    @Override
+    public void getCurrentRegionOfCharacter(int cid, Handler<RegionMeta> handler) {
+        Log.v(LOG_TAG, "try to get current region of cid '" + cid + "'...");
+
         try (Connection conn = Database.getConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement(Database.replacePrefix(SELECT_CURRENT_REGION))) {
                 //select character
@@ -134,13 +138,8 @@ public class CharacterService implements ICharacterService {
                     while (rs.next()) {
                         int regionID = rs.getInt("current_regionID");
                         int instanceID = rs.getInt("instanceID");
-                        String regionTitle = rs.getString("title");
 
-                        int posX = rs.getInt("pos_x");
-                        int posY = rs.getInt("pos_y");
-                        int posZ = rs.getInt("pos_z");
-
-                        RegionMetaData region = new RegionMetaData(regionID, instanceID, regionTitle, posX, posY, posZ);
+                        RegionMeta region = new RegionMeta(regionID, instanceID);
                         handler.handle(region);
 
                         return;
@@ -148,11 +147,11 @@ public class CharacterService implements ICharacterService {
                 }
             }
         } catch (SQLException e) {
-            MMOLogger.warn(LOG_TAG, "SQLException while get current region of character.", e);
+            Log.w(LOG_TAG, "SQLException while get current region of character: ", e);
             e.printStackTrace();
             handler.handle(null);
         }
-    }*/
+    }
 
     protected boolean existsCharacterName (String name) {
         try (Connection conn = Database.getConnection()) {
