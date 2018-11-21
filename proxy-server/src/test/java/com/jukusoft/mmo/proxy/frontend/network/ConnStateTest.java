@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ConnStateTest {
 
@@ -18,6 +19,9 @@ public class ConnStateTest {
         assertEquals(false, state.isLoggedIn());
         assertEquals(-1, state.getUserID());
         assertEquals("", state.getUsername());
+        assertNull(state.getUser());
+        assertEquals(false, state.isGameMaster());
+        assertEquals(0, state.getCID());
     }
 
     @Test

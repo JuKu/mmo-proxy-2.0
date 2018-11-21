@@ -57,6 +57,11 @@ public class ConnState {
     }
 
     public boolean isGameMaster () {
+        if (this.user == null) {
+            //user isn't logged in
+            return false;
+        }
+
         return this.user.hasGroup(Config.get("Security", "gamemasterGroup"));
     }
 

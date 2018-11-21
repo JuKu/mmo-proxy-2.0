@@ -22,6 +22,10 @@ public class GSConnectionManager {
 
     public void requestJoin (long regionID, int instanceID, Handler<Boolean> handler) {
         //TODO: find free shard
+
+        //TODO: connect to region server
+
+        //TODO: send cluster login data to region server
     }
 
     /**
