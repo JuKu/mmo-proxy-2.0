@@ -1,6 +1,7 @@
 package com.jukusoft.mmo.proxy.frontend.network;
 
 import com.jukusoft.mmo.engine.shared.logger.Log;
+import com.jukusoft.vertx.connection.clientserver.TCPClient;
 import com.jukusoft.vertx.connection.stream.BufferStream;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
@@ -13,6 +14,7 @@ public class GSConnectionManager {
     protected static final String LOG_TAG = "GSConn";
 
     protected final BufferStream streamToClient;
+    protected TCPClient currentConn = null;
 
     /**
     * default constructor
@@ -54,14 +56,20 @@ public class GSConnectionManager {
     }
 
     public void sendToActiveRegion (Buffer buffer) {
-        //
+        if (this.currentConn == null) {
+            throw new IllegalStateException("currently no region connection is active.");
+        }
+
+        this.currentConn.sendRaw(buffer);
     }
 
     /**
     * close all connections to game server
     */
     public void closeAllConnections () {
-        //
+        if (this.currentConn != null) {
+            this.currentConn.disconnect();
+        }
     }
 
 }

@@ -80,3 +80,7 @@ Open conenction to region server, send JOIN character message with following dat
 From **client side**:\
 \
 ![Flowchart](./docs/images/Flowchart.png)
+
+## Join region - Flowchart
+
+![Join region](./docs/images/region_join.png)
