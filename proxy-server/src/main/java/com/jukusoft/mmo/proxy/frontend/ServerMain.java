@@ -72,7 +72,7 @@ public class ServerMain {
         Version.setInstance(new Version(ServerMain.class));
 
         //print proxy server version information
-        Utils.printSection("Game Version");
+        Utils.printSection("Proxy Version");
         Log.i(VERSION_TAG, "Version: " + version.getVersion());
         Log.i(VERSION_TAG, "Build: " + version.getRevision());
         Log.i(VERSION_TAG, "Build JDK: " + version.getBuildJdk());
