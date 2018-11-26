@@ -1,8 +1,13 @@
 package com.jukusoft.mmo.proxy.frontend.network;
 
 import com.jukusoft.mmo.engine.shared.logger.Log;
+import com.jukusoft.mmo.proxy.frontend.Const;
+import com.jukusoft.vertx.connection.clientserver.MessageHandler;
+import com.jukusoft.vertx.connection.clientserver.RemoteConnection;
+import com.jukusoft.vertx.connection.clientserver.ServerData;
 import com.jukusoft.vertx.connection.clientserver.TCPClient;
 import com.jukusoft.vertx.connection.stream.BufferStream;
+import com.jukusoft.vertx.serializer.utils.ByteUtils;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -70,7 +75,46 @@ public class GSConnectionManager {
     * open game server connection to a specific region
     */
     protected void open (String ip, int port) {
-        //TODO: connect to region server
+        // close old connection first, if neccessary
+        if (this.currentConn != null) {
+            this.currentConn.disconnect();
+            this.currentConn = null;
+        }
+
+        //connect to region server
+        this.currentConn = new TCPClient();
+        this.currentConn.init(this.vertx);
+
+        //set custom message handler to redirect messages from region server directly to client
+        this.currentConn.setCustomMessageHandler((buffer, conn) -> {
+            //get type
+            byte type = buffer.getByte(0);
+            byte extendedType = buffer.getByte(1);
+
+            //check, if type has to be handled from proxy server itself
+            if (Const.PROXY_HANDLER_TYPES[type]) {
+                //TODO: add code here
+
+                throw new UnsupportedOperationException("proxy server types aren't supported yet.");
+            } else {
+                //redirect message to client
+                this.streamToClient.write(buffer);
+            }
+        });
+
+        this.currentConn.connect(new ServerData(ip, port), res -> {
+            if (!res.succeeded()) {
+                Log.w(LOG_TAG, "Couldn't connect to region server " + ip + ":" + port);
+
+                //TODO: send error back to client
+
+                return;
+            }
+
+            Log.i(LOG_TAG, "GSConn established successfully to gs " + ip + ":" + port);
+
+            //TODO: send success message to client
+        });
 
         //TODO: send cluster login data to region server to authentificate connection
     }
