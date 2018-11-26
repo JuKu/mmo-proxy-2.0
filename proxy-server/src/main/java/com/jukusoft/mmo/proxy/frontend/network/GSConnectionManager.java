@@ -28,6 +28,7 @@ public class GSConnectionManager {
     protected DeliveryOptions deliveryOptions = new DeliveryOptions();
 
     protected TCPClient currentConn = null;
+    protected boolean authentificated = false;
 
     /**
     * default constructor
@@ -53,6 +54,8 @@ public class GSConnectionManager {
         json.put("instanceID", instanceID);
         this.vertx.eventBus().send("region-manager", json.encode(), this.deliveryOptions, (Handler<AsyncResult<Message<String>>>) res -> {
             if (res.succeeded()) {
+                Log.v(LOG_TAG, "got correct region from zonekeeper for region " + regionID + ", instanceID " + instanceID + ".");
+
                 Message<String> msg = res.result();
                 JsonObject response = new JsonObject(msg.body());
 
@@ -64,6 +67,8 @@ public class GSConnectionManager {
                 this.open(ip, port);
 
                 //TODO: send gs join message to region server with user, character & permissions data
+
+                handler.handle(true);
             } else {
                 //get region server failed (maybe caused by timeout)
                 handler.handle(false);
@@ -80,6 +85,9 @@ public class GSConnectionManager {
             this.currentConn.disconnect();
             this.currentConn = null;
         }
+
+        // reset auth flag
+        this.authentificated = false;
 
         //connect to region server
         this.currentConn = new TCPClient();
@@ -113,10 +121,10 @@ public class GSConnectionManager {
 
             Log.i(LOG_TAG, "GSConn established successfully to gs " + ip + ":" + port);
 
+            //TODO: send cluster login data to region server to authentificate connection
+
             //TODO: send success message to client
         });
-
-        //TODO: send cluster login data to region server to authentificate connection
     }
 
     /**
@@ -133,6 +141,11 @@ public class GSConnectionManager {
     public void sendToActiveRegion (Buffer buffer) {
         if (this.currentConn == null) {
             throw new IllegalStateException("currently no region connection is active.");
+        }
+
+        if (!this.authentificated) {
+            Log.w(LOG_TAG, "region connection isn't authentificated yet.");
+            throw new IllegalStateException("region connection isn't authentificated yet.");
         }
 
         this.currentConn.sendRaw(buffer);
