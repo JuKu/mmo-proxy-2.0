@@ -74,7 +74,7 @@ public class EnterGameWorldRequestHandler implements MessageListener {
             //open connection to region server
             gsConn.requestJoin(regionID, instanceID, success -> {
                 if (!success) {
-                    Log.w(LOG_TAG, "player with cid '" + cid + "' couldn't join region " + regionID + ", instanceID: " + instanceID + ".");
+                    Log.w(LOG_TAG, "player with cid '" + cid + "' couldn't join region " + regionID + ", instanceID: " + instanceID + ", maybe zonekeeper is down?");
 
                     //send error message back to client
                     response.setResult(EnterGameWorldResponse.RESULT_CODE.SERVER_ERROR);
