@@ -13,6 +13,7 @@ import com.jukusoft.mmo.proxy.frontend.database.Database;
 import com.jukusoft.mmo.proxy.frontend.database.DatabaseUpgrader;
 import com.jukusoft.mmo.proxy.frontend.database.MySQLConfig;
 import com.jukusoft.mmo.proxy.frontend.handler.*;
+import com.jukusoft.mmo.proxy.frontend.loadbalancer.RegionKeeper;
 import com.jukusoft.mmo.proxy.frontend.log.HzLogger;
 import com.jukusoft.mmo.proxy.frontend.network.ProxyServer;
 import com.jukusoft.mmo.proxy.frontend.utils.EncryptionUtils;
@@ -160,6 +161,11 @@ public class ServerMain {
         vertxManager.init(hazelcastInstance);
         Vertx vertx = vertxManager.getVertx();
 
+        //start region keeper
+        Log.i("LB", "start region keeper as load balancer...");
+        RegionKeeper regionKeeper = new RegionKeeper(vertx, hazelcastInstance);
+        regionKeeper.start();
+
         //start proxy server
         ProxyServer proxyServer = new ProxyServer(vertx);
         String host = Config.get("Proxy", "host");
@@ -238,6 +244,9 @@ public class ServerMain {
         //print log
         Utils.printSection("Shutdown");
         Log.i("Shutdown", "Shutdown now.");
+
+        //shutdown region load balancer
+        regionKeeper.shutdown();
 
         //shutdown vertx
         vertxManager.shutdown();

@@ -52,7 +52,7 @@ public class GSConnectionManager {
         JsonObject json = new JsonObject();
         json.put("regionID", regionID);
         json.put("instanceID", instanceID);
-        this.vertx.eventBus().send("region-manager", json.encode(), this.deliveryOptions, (Handler<AsyncResult<Message<String>>>) res -> {
+        this.vertx.eventBus().send("region-manager::get()", json.encode(), this.deliveryOptions, (Handler<AsyncResult<Message<String>>>) res -> {
             if (res.succeeded()) {
                 Log.v(LOG_TAG, "got correct region from zonekeeper for region " + regionID + ", instanceID " + instanceID + ".");
 
@@ -70,6 +70,8 @@ public class GSConnectionManager {
 
                 handler.handle(true);
             } else {
+                Log.w(LOG_TAG, "region-manager::get() has failed. Cause: ", res.cause());
+
                 //get region server failed (maybe caused by timeout)
                 handler.handle(false);
             }
