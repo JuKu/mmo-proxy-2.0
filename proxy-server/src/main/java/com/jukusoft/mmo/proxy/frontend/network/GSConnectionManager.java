@@ -59,16 +59,22 @@ public class GSConnectionManager {
                 Message<String> msg = res.result();
                 JsonObject response = new JsonObject(msg.body());
 
+                //check, if an error has occured
+                if (!response.getString("error").equals("none")) {
+                    Log.w(LOG_TAG, "region-manager::get() returned error: " + response.getString("error"));
+                    handler.handle(false);
+                }
+
                 //get ip and port
                 String ip = response.getString("ip");
                 int port = response.getInteger("port");
 
                 //open connection to region server
-                this.open(ip, port);
+                this.open(ip, port, result -> {
+                    //TODO: send gs join message to region server with user, character & permissions data
 
-                //TODO: send gs join message to region server with user, character & permissions data
-
-                handler.handle(true);
+                    handler.handle(result);
+                });
             } else {
                 Log.w(LOG_TAG, "region-manager::get() has failed. Cause: ", res.cause());
 
@@ -81,7 +87,7 @@ public class GSConnectionManager {
     /**
     * open game server connection to a specific region
     */
-    protected void open (String ip, int port) {
+    protected void open (String ip, int port, Handler<Boolean> connectHandler) {
         // close old connection first, if neccessary
         if (this.currentConn != null) {
             this.currentConn.disconnect();
@@ -117,6 +123,9 @@ public class GSConnectionManager {
                 Log.w(LOG_TAG, "Couldn't connect to region server " + ip + ":" + port);
 
                 //TODO: send error back to client
+                connectHandler.handle(false);
+
+                //TODO: notify load balancer that server is down
 
                 return;
             }
@@ -126,6 +135,8 @@ public class GSConnectionManager {
             //TODO: send cluster login data to region server to authentificate connection
 
             //TODO: send success message to client
+
+            connectHandler.handle(true);
         });
     }
 
