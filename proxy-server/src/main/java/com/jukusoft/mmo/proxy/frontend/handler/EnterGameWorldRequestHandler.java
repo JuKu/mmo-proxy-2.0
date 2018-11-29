@@ -85,6 +85,10 @@ public class EnterGameWorldRequestHandler implements MessageListener {
 
                 Log.v(LOG_TAG, "player with cid '" + cid + "' joined region " + regionID + ", instanceID: " + instanceID + ".");
 
+                response.cid = cid;
+                response.username = state.getUsername();
+                response.setGroups(state.getUser().listGroups());
+
                 //send message back to client so client can show loading screen now
                 response.setResult(EnterGameWorldResponse.RESULT_CODE.SUCCESS);
                 clientConn.send(response);

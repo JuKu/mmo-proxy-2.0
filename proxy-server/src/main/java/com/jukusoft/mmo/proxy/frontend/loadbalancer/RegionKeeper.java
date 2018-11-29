@@ -86,6 +86,8 @@ public class RegionKeeper {
                 //send error
                 response.put("error", "all gameservers are currently down.");
                 msg.reply(response.encode());
+
+                return;
             }
 
             //choose gameserver
