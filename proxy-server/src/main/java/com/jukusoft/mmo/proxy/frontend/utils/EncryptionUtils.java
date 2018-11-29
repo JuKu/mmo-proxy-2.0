@@ -19,6 +19,8 @@ public class EncryptionUtils {
 
     /**
     * set public key
+     *
+     * @param pubKey global RSA public key which is used for encryption later
     */
     public static void init (PublicKey pubKey) {
         EncryptionUtils.pubKey = pubKey;

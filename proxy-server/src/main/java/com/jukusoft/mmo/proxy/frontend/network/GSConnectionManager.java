@@ -34,6 +34,7 @@ public class GSConnectionManager {
     * default constructor
      *
      * @param streamToClient buffer stream which sends buffer to client
+     * @param vertx singleton vertx instance
     */
     public GSConnectionManager(BufferStream streamToClient, Vertx vertx) {
         this.streamToClient = streamToClient;
@@ -88,6 +89,10 @@ public class GSConnectionManager {
 
     /**
     * open game server connection to a specific region
+     *
+     * @param ip gameserver ip
+     * @param port gameserver port
+     * @param connectHandler handler which is called if connection was established or has failed
     */
     protected void open (String ip, int port, Handler<Boolean> connectHandler) {
         // close old connection first, if neccessary
@@ -148,6 +153,7 @@ public class GSConnectionManager {
      * @param regionID regionID
      * @param instanceID instanceID
      * @param shardID shardID
+     * @param buffer message
     */
     public void send (long regionID, int instanceID, int shardID, Buffer buffer) {
         throw new UnsupportedOperationException("operation isn't supported yet.");

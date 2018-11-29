@@ -34,6 +34,9 @@ public class RegionKeeper {
 
     /**
     * default constructor
+     *
+     * @param vertx singleton vertx instance
+     * @param hazelcastInstance singleton hazelcast instance
     */
     public RegionKeeper (Vertx vertx, HazelcastInstance hazelcastInstance) {
         Objects.requireNonNull(vertx);
