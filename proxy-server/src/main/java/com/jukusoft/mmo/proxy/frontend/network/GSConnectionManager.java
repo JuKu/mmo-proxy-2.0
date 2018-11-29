@@ -141,8 +141,6 @@ public class GSConnectionManager {
 
             //TODO: send cluster login data to region server to authentificate connection
 
-            //TODO: send success message to client
-
             connectHandler.handle(true);
         });
     }
