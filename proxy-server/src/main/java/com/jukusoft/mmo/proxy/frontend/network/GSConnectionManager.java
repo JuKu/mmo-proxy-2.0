@@ -63,6 +63,8 @@ public class GSConnectionManager {
                 if (!response.getString("error").equals("none")) {
                     Log.w(LOG_TAG, "region-manager::get() returned error: " + response.getString("error"));
                     handler.handle(false);
+
+                    return;
                 }
 
                 //get ip and port
