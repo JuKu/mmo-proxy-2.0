@@ -31,7 +31,6 @@ public class GSConnectionManager {
     protected final Vertx vertx;
     protected DeliveryOptions deliveryOptions = new DeliveryOptions();
     protected final ConnState state;
-    protected final User user;
 
     protected TCPClient currentConn = null;
     protected boolean authentificated = false;
@@ -46,7 +45,6 @@ public class GSConnectionManager {
         this.streamToClient = streamToClient;
         this.vertx = vertx;
         this.state = connState;
-        this.user = connState.getUser();
 
         //set send timeout of 3 seconds
         this.deliveryOptions.setSendTimeout(3000);
@@ -95,10 +93,10 @@ public class GSConnectionManager {
                         joinMessage.cluster_password = Config.get("Cluster", "password");
 
                         //set user and character information & permission groups
-                        joinMessage.userID = this.user.getUserID();
-                        joinMessage.username = this.user.getUsername();
+                        joinMessage.userID = this.state.getUserID();
+                        joinMessage.username = this.state.getUsername();
                         joinMessage.cid = this.state.getCID();
-                        joinMessage.setGroups(this.user.listGroups());
+                        joinMessage.setGroups(this.state.getUser().listGroups());
 
                         //set region information
                         joinMessage.regionID = regionID;
