@@ -80,7 +80,7 @@ public class ProxyServer {
 
         final Connection connection = new Connection(socket, bufferStream);
         final ConnState state = new ConnState();
-        final GSConnectionManager gsConnectionManager = new GSConnectionManager(bufferStream, this.vertx);
+        final GSConnectionManager gsConnectionManager = new GSConnectionManager(bufferStream, this.vertx, state);
 
         bufferStream.handler(buffer -> {
             //get type

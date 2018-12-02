@@ -183,6 +183,7 @@ public class ServerMain {
         TypeLookup.register(CreateCharacterRequest.class);
         TypeLookup.register(CreateCharacterResponse.class);
         TypeLookup.register(EnterGameWorldRequest.class);
+        TypeLookup.register(JoinRegionMessage.class);
 
         //register handlers
         proxyServer.addMessageListener(new PublicKeyRequestHandler(keyPair.getPublic()));

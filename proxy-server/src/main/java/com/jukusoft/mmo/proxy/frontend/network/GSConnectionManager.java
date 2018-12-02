@@ -1,7 +1,11 @@
 package com.jukusoft.mmo.proxy.frontend.network;
 
+import com.jukusoft.mmo.engine.shared.config.Config;
 import com.jukusoft.mmo.engine.shared.logger.Log;
+import com.jukusoft.mmo.engine.shared.memory.Pools;
+import com.jukusoft.mmo.engine.shared.messages.JoinRegionMessage;
 import com.jukusoft.mmo.proxy.frontend.Const;
+import com.jukusoft.mmo.proxy.frontend.login.User;
 import com.jukusoft.vertx.connection.clientserver.MessageHandler;
 import com.jukusoft.vertx.connection.clientserver.RemoteConnection;
 import com.jukusoft.vertx.connection.clientserver.ServerData;
@@ -26,6 +30,8 @@ public class GSConnectionManager {
     protected final BufferStream streamToClient;
     protected final Vertx vertx;
     protected DeliveryOptions deliveryOptions = new DeliveryOptions();
+    protected final ConnState state;
+    protected final User user;
 
     protected TCPClient currentConn = null;
     protected boolean authentificated = false;
@@ -36,9 +42,11 @@ public class GSConnectionManager {
      * @param streamToClient buffer stream which sends buffer to client
      * @param vertx singleton vertx instance
     */
-    public GSConnectionManager(BufferStream streamToClient, Vertx vertx) {
+    public GSConnectionManager(BufferStream streamToClient, Vertx vertx,ConnState connState) {
         this.streamToClient = streamToClient;
         this.vertx = vertx;
+        this.state = connState;
+        this.user = connState.getUser();
 
         //set send timeout of 3 seconds
         this.deliveryOptions.setSendTimeout(3000);
@@ -48,6 +56,7 @@ public class GSConnectionManager {
         Log.d(LOG_TAG, "try to join region " + regionID + " on instanceID: " + instanceID + "...");
 
         //find free shard
+        int shardID = 1;
 
         //request region server
         JsonObject json = new JsonObject();
@@ -74,7 +83,31 @@ public class GSConnectionManager {
 
                 //open connection to region server
                 this.open(ip, port, result -> {
-                    //TODO: send gs join message to region server with user, character & permissions data
+                    if (result) {
+                        //TODO: send gs join message to region server with user, character & permissions data
+
+                        //create join message for gs server
+                        Log.v(LOG_TAG, "send join message to region server");
+                        JoinRegionMessage joinMessage = Pools.get(JoinRegionMessage.class);
+
+                        //set cluster credentials to authentificate proxy server connection on region server
+                        joinMessage.cluster_username = Config.get("Cluster", "username");
+                        joinMessage.cluster_password = Config.get("Cluster", "password");
+
+                        //set user and character information & permission groups
+                        joinMessage.userID = this.user.getUserID();
+                        joinMessage.username = this.user.getUsername();
+                        joinMessage.cid = this.state.getCID();
+                        joinMessage.setGroups(this.user.listGroups());
+
+                        //set region information
+                        joinMessage.regionID = regionID;
+                        joinMessage.instanceID = instanceID;
+                        joinMessage.shardID = shardID;
+
+                        //send join message to region server
+                        this.currentConn.send(joinMessage);
+                    }
 
                     handler.handle(result);
                 });
@@ -139,8 +172,6 @@ public class GSConnectionManager {
 
             Log.i(LOG_TAG, "GSConn established successfully to gs " + ip + ":" + port);
 
-            //TODO: send cluster login data to region server to authentificate connection
-
             connectHandler.handle(true);
         });
     }
@@ -174,6 +205,8 @@ public class GSConnectionManager {
     * close all connections to game server
     */
     public void closeAllConnections () {
+        Log.v(LOG_TAG, "close all gameserver connections now.");
+
         if (this.currentConn != null) {
             this.currentConn.disconnect();
         }
