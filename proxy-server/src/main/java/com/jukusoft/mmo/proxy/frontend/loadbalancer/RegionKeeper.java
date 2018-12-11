@@ -2,7 +2,10 @@ package com.jukusoft.mmo.proxy.frontend.loadbalancer;
 
 import com.hazelcast.core.*;
 import com.jukusoft.mmo.engine.shared.logger.Log;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.json.JsonObject;
@@ -32,6 +35,11 @@ public class RegionKeeper {
     protected final IAtomicLong nextIndex;
     protected final ILock nextIDLock;
 
+    //key: game server "ip:port", value: regionID-instanceID-shardID
+    protected final MultiMap<String,String> gsToMaps;
+
+    protected DeliveryOptions deliveryOptions = new DeliveryOptions();
+
     /**
     * default constructor
      *
@@ -49,6 +57,10 @@ public class RegionKeeper {
         this.gsServerList = hazelcastInstance.getList("gs-servers-list");
         this.nextIndex = hazelcastInstance.getAtomicLong("region-next-id");
         this.nextIDLock = hazelcastInstance.getLock("region-nextID-lock");
+        this.gsToMaps = hazelcastInstance.getMultiMap("gameserver-to-maps");
+
+        //set send timeout of 3 seconds
+        this.deliveryOptions.setSendTimeout(3000);
     }
 
     public void start () {
@@ -58,17 +70,24 @@ public class RegionKeeper {
     }
 
     protected void handleGetRequest (Message<String> msg) {
-        Log.d(LOG_TAG, "RegionKeeper::get() called.");
+        Log.d(LOG_TAG, "RegionKeeper::get() called, find gameserver for region.");
 
         // convert request to json object and get parameters
         JsonObject request = new JsonObject(msg.body());
         long regionID = request.getLong("regionID");
         int instanceID = request.getInteger("instanceID");
-        String regionToken = regionID + "-" + instanceID;
+
+        //TODO: read shardID
+        int shardID = 1;
+
+        String regionToken = regionID + "-" + instanceID + "-" + shardID;
 
         JsonObject response = new JsonObject();
 
         String serverStr = "";
+
+        //flag, if region should be started
+        boolean startRegion = false;
 
         //check if region is already running
         if (this.assignedRegions.containsKey(regionToken)) {
@@ -100,12 +119,34 @@ public class RegionKeeper {
         String array[] = serverStr.split(":");
         String ip = array[0];
         int port = Integer.parseInt(array[1]);
+        final String serverStrCpy = serverStr;
 
-        //send answer back to server which requested this region
-        response.put("ip", ip);
-        response.put("port", port);
-        response.put("error", "none");
-        msg.reply(response.encode());
+        if (startRegion) {
+            //startup region
+            this.gsToMaps.put(ip + ":" + port, regionToken);
+
+            JsonObject json = new JsonObject();
+            this.vertx.eventBus().send("gs-" + ip + ":" + port, json.encode(), this.deliveryOptions, new Handler<AsyncResult<Message<String>>>() {
+                @Override
+                public void handle(AsyncResult<Message<String>> event) {
+                    String error = "none";
+
+                    if (event.succeeded()) {
+                        //region was started up
+                        Log.i(LOG_TAG, "region " + regionToken + " was started up successfully on gameserver " + serverStrCpy + "!");
+                    } else {
+                        error = "Error!";
+                        Log.w(LOG_TAG, "Error while trying to start region " + regionToken + " on gameserver " + serverStrCpy + "...", event.cause());
+                    }
+
+                    //send answer back to server which requested this region
+                    response.put("ip", ip);
+                    response.put("port", port);
+                    response.put("error", error);
+                    msg.reply(response.encode());
+                }
+            });
+        }
     }
 
     protected String getGSServer (String regionToken) {

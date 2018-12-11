@@ -82,7 +82,7 @@ public class GSConnectionManager {
                 //open connection to region server
                 this.open(ip, port, result -> {
                     if (result) {
-                        //TODO: send gs join message to region server with user, character & permissions data
+                        //send gs join message to region server with user, character & permissions data
 
                         //create join message for gs server
                         Log.v(LOG_TAG, "send join message to region server");

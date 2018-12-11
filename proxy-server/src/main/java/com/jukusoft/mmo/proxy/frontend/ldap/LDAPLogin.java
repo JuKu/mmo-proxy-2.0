@@ -67,12 +67,17 @@ public class LDAPLogin {
         env.put(Context.SECURITY_CREDENTIALS, password);
         DirContext context = null;
 
+        //set connection timeout
+        env.put("com.sun.jndi.ldap.read.timeout", Config.get("LDAP", "timeout"));
+
         // do the ldap bind (validate username and password
         boolean loggedIn;
         try {
             context = new InitialDirContext(env);
             loggedIn = true;
         } catch (NamingException e) {
+            Log.w(LOG_TAG, "NamingException while ldap login: ", e);
+
             loggedIn = false;
             return null;
         }
