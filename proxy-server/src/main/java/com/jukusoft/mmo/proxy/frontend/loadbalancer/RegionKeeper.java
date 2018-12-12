@@ -126,7 +126,15 @@ public class RegionKeeper {
             this.gsToMaps.put(ip + ":" + port, regionToken);
 
             JsonObject json = new JsonObject();
-            this.vertx.eventBus().send("gs-" + ip + ":" + port, json.encode(), this.deliveryOptions, new Handler<AsyncResult<Message<String>>>() {
+            json.put("regionID", regionID);
+            json.put("instanceID", instanceID);
+            json.put("shardID", shardID);
+
+            json.put("gameserver", serverStrCpy);
+
+            Log.i(LOG_TAG, "try to start region " + regionToken + " on gameserver " + serverStrCpy + "...");
+
+            this.vertx.eventBus().send("gs-start-" + ip + ":" + port, json.encode(), this.deliveryOptions, new Handler<AsyncResult<Message<String>>>() {
                 @Override
                 public void handle(AsyncResult<Message<String>> event) {
                     String error = "none";
