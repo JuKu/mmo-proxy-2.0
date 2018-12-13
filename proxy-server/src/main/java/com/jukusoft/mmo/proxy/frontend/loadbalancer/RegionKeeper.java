@@ -114,6 +114,8 @@ public class RegionKeeper {
 
             //choose gameserver
             serverStr = this.getGSServer(regionToken);
+
+            startRegion = true;
         }
 
         String array[] = serverStr.split(":");
@@ -154,6 +156,12 @@ public class RegionKeeper {
                     msg.reply(response.encode());
                 }
             });
+        } else {
+            //send answer with running region back to server which requested this region
+            response.put("ip", ip);
+            response.put("port", port);
+            response.put("error", "none");
+            msg.reply(response.encode());
         }
     }
 
