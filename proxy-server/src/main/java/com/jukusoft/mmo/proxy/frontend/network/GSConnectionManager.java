@@ -148,6 +148,7 @@ public class GSConnectionManager {
             //if message is LoadMapResponse this means region is authentificated - else region server will close connection directly
             if (type == 0x02 && extendedType == 0x01) {
                 this.authentificated = true;
+                Log.d(LOG_TAG, "connection to region server is authentificated now.");
             }
 
             //check, if type has to be handled from proxy server itself
