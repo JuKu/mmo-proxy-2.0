@@ -145,6 +145,11 @@ public class GSConnectionManager {
             byte type = buffer.getByte(0);
             byte extendedType = buffer.getByte(1);
 
+            //if message is LoadMapResponse this means region is authentificated - else region server will close connection directly
+            if (type == 0x02 && extendedType == 0x01) {
+                this.authentificated = true;
+            }
+
             //check, if type has to be handled from proxy server itself
             if (Const.PROXY_HANDLER_TYPES[type]) {
                 //TODO: add code here
