@@ -63,7 +63,8 @@ Also it is more independent from game server, they don't share the same database
 | 0x01  | 0x07  | proxy --> region  | join region request & response  | x  | x  |
 | 0x01  | 0x08  | proxy <-- region  | leave region message  | x  | -  |
 | **0x02**  | 0x01  | proxy <-- region  | load map  | x  | x  |
-| 0x02  | 0x02  | proxy <--> region  | request some region client files to download / send one file content to client  | x  | -  |
+| 0x02  | 0x02  | proxy <--> region  | request some region client files to download / send one file content to client  | x  | x  |
+| 0x02  | 0x03  | proxy <--> region  | start syncing of game state (current player position and so on) request / response  | x  | -  |
 
 ### Login Proxy --> Region Server
 
