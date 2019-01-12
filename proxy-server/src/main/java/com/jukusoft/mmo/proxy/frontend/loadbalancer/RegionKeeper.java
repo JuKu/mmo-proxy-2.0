@@ -136,25 +136,25 @@ public class RegionKeeper {
 
             Log.i(LOG_TAG, "try to start region " + regionToken + " on gameserver " + serverStrCpy + "...");
 
-            this.vertx.eventBus().send("gs-start-" + ip + ":" + port, json.encode(), this.deliveryOptions, new Handler<AsyncResult<Message<String>>>() {
-                @Override
-                public void handle(AsyncResult<Message<String>> event) {
-                    String error = "none";
+            this.vertx.eventBus().send("gs-start-" + ip + ":" + port, json.encode(), this.deliveryOptions, (Handler<AsyncResult<Message<String>>>) event -> {
+                String error = "none";
 
-                    if (event.succeeded()) {
-                        //region was started up
-                        Log.i(LOG_TAG, "region " + regionToken + " was started up successfully on gameserver " + serverStrCpy + "!");
-                    } else {
-                        error = "Error!";
-                        Log.w(LOG_TAG, "Error while trying to start region " + regionToken + " on gameserver " + serverStrCpy + "...", event.cause());
-                    }
+                if (event.succeeded()) {
+                    //region was started up
+                    Log.i(LOG_TAG, "region " + regionToken + " was started up successfully on gameserver " + serverStrCpy + "!");
 
-                    //send answer back to server which requested this region
-                    response.put("ip", ip);
-                    response.put("port", port);
-                    response.put("error", error);
-                    msg.reply(response.encode());
+                    //add this assignment to cache
+                    this.assignedRegions.put(regionToken, serverStrCpy);
+                } else {
+                    error = "Error!";
+                    Log.w(LOG_TAG, "Error while trying to start region " + regionToken + " on gameserver " + serverStrCpy + "...", event.cause());
                 }
+
+                //send answer back to server which requested this region
+                response.put("ip", ip);
+                response.put("port", port);
+                response.put("error", error);
+                msg.reply(response.encode());
             });
         } else {
             //send answer with running region back to server which requested this region
