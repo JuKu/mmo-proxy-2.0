@@ -28,6 +28,16 @@
 			</excludes>
 		</fileSet>
 
+		<!-- logs directory -->
+		<fileSet>
+			<directory>../logs</directory>
+			<outputDirectory>logs</outputDirectory>
+			<excludes>
+				<exclude>*junit*</exclude>
+				<exclude>*.txt</exclude>
+			</excludes>
+		</fileSet>
+
 		<!-- docs directory -->
 		<!-- <fileSet>
 			<directory>../docs</directory>

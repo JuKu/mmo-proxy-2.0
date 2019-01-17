@@ -1,1 +1,1 @@
-java -jar mmo-proxy-frontend-1.0.0-SNAPSHOT.jar
+java -jar mmo-proxy-frontend-1.0.0-SNAPSHOT.jar --illegal-access=warn
