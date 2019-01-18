@@ -41,6 +41,8 @@ public class ServerMain {
     protected static final String NETWORK_TAG = "Network";
     protected static final String DATABASE_TAG = "Database";
 
+    protected static final String HAZELCAST_MANCENTER_TAG = "HazelcastManCenter";
+
     public static void main (String[] args) {
         //start game
         try {
@@ -301,6 +303,13 @@ public class ServerMain {
 
             CacheSimpleConfig cacheConfig = new CacheSimpleConfig();
             config.getCacheConfigs().put("session-cache", cacheConfig);
+
+            //https://docs.hazelcast.org/docs/management-center/3.9.4/manual/html/Deploying_and_Starting.html
+            if (Config.getBool(HAZELCAST_MANCENTER_TAG, "enabled")) {
+                //configure connection to hazelcast management center
+                config.getManagementCenterConfig().setEnabled(true);
+                config.getManagementCenterConfig().setUrl(Config.get(HAZELCAST_MANCENTER_TAG, "url"));
+            }
 
             return Hazelcast.newHazelcastInstance(config);
         } else {
