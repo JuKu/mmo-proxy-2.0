@@ -1,6 +1,8 @@
 package com.jukusoft.mmo.proxy.frontend;
 
 import com.hazelcast.config.CacheSimpleConfig;
+import com.hazelcast.config.JoinConfig;
+import com.hazelcast.config.TcpIpConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.jukusoft.mmo.engine.shared.config.Config;
@@ -301,11 +303,29 @@ public class ServerMain {
             //create an new hazelcast instance
             com.hazelcast.config.Config config = new com.hazelcast.config.Config();
 
-            //disable hazelcast logging
-            config.setProperty("hazelcast.logging.type", "none");
+            if (!Config.getBool(HAZELCAST_TAG, "hazelcastLogging")) {
+                //disable hazelcast logging
+                config.setProperty("hazelcast.logging.type", "none");
+            }
 
             CacheSimpleConfig cacheConfig = new CacheSimpleConfig();
             config.getCacheConfigs().put("session-cache", cacheConfig);
+
+            JoinConfig joinConfig = config.getNetworkConfig().getJoin();
+
+            if (Config.getBool(HAZELCAST_TAG, "joinConfig")) {
+                //disable other join configs
+                joinConfig.getMulticastConfig().setEnabled(false);
+
+                Log.i(HAZELCAST_TAG, "join config enabled.");
+                TcpIpConfig ipConfig = joinConfig.getTcpIpConfig();
+
+                String members = Config.get(HAZELCAST_TAG, "members");
+                ipConfig.addMember(members);
+                Log.i(HAZELCAST_TAG, "tcp/ip cluster members: " + members);
+
+                ipConfig.setEnabled(true);
+            }
 
             //https://docs.hazelcast.org/docs/management-center/3.9.4/manual/html/Deploying_and_Starting.html
             if (Config.getBool(HAZELCAST_MANCENTER_TAG, "enabled")) {
