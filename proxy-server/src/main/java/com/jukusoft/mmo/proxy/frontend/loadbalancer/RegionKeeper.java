@@ -135,6 +135,7 @@ public class RegionKeeper {
             json.put("gameserver", serverStrCpy);
 
             Log.i(LOG_TAG, "try to start region " + regionToken + " on gameserver " + serverStrCpy + "...");
+            Log.d(LOG_TAG, "send event to 'gs-start-" + ip + ":" + port + "'");
 
             this.vertx.eventBus().send("gs-start-" + ip + ":" + port, json.encode(), this.deliveryOptions, (Handler<AsyncResult<Message<String>>>) event -> {
                 String error = "none";
