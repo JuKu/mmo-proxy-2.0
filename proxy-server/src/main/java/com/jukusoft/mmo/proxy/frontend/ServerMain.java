@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -81,7 +83,8 @@ public class ServerMain {
             System.exit(0);
         }
 
-        Log.i("Startup", "Started Proxy Server.");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Log.i("Startup", "Started Proxy Server (" + sdf.format(new Date()) + ").");
 
         //set global version
         Version version = new Version(ServerMain.class);
